@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from "three";
+        import WebGL from "three/addons/capabilities/WebGL.js";
+
+        if(!WebGL.isWebGLAvailable())
+            alert(WebGL.getWebGLErrorMessage());
+        else
+            alert("WebGL 1 is active");
+        if(!WebGL.isWebGL2Available())
+            alert(WebGL.getWebGLErrorMessage());
+        else
+            alert("WebGL 2 is active");
+    </script>
+</body>
+</html>

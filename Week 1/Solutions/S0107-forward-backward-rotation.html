@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0107: Въртене напред-назад</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
+			}
+		  }
+		</script>
+	</head>
+
+
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+
+			var renderer = new THREE.WebGLRenderer( {antialias:true} );
+			renderer.setSize(window.innerWidth, window.innerHeight, true);
+			renderer.setAnimationLoop(frame);
+
+			document.body.appendChild(renderer.domElement);
+			document.body.style.margin = 0;
+			document.body.style.overflow = 'hidden';
+
+			var scene = new THREE.Scene();
+			scene.background = new THREE.Color('white');
+
+			var aspect = window.innerWidth / window.innerHeight;
+			var camera = new THREE.PerspectiveCamera(60, aspect, 1, 100);
+			camera.position.set(1, 1, 2);
+			camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+			var light = new THREE.PointLight('white', 20);
+			light.position.set(1, 2, 3);
+			scene.add(light);
+
+			var geometry = new THREE.BoxGeometry(1, 1, 1);
+			var material = new THREE.MeshLambertMaterial();
+			var cube = new THREE.Mesh(geometry, material);
+			scene.add(cube);
+
+
+			function frame(time)
+			{
+				// добавяме sin към времето, така въртенето
+				// ще зигзагчи между -1 и +1 радиана
+				cube.rotation.y = Math.sin(time / 1000);
+
+				renderer.render(scene, camera);
+			}
+			
+		</script>
+	</body>
+</html>
+
+
