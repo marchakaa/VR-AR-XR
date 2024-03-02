@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0201: Плочка с дупка</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {vaxInit, scene} from "vax";
+			
+			vaxInit(animate);
+            
+            let boxGeometry = new THREE.BoxGeometry(1, 3, 1);
+            let cylinderGeometry = new THREE.CylinderGeometry(5, 5, 3, 32, 32, false, 0, Math.PI/2);
+            let material = new THREE.MeshLambertMaterial();
+
+            let roundedPlate = new THREE.Group();
+            roundedPlate.scale.set(3, 1.5, 3);
+            scene.add(roundedPlate);
+
+            let plate1 = new THREE.Mesh(boxGeometry, material);
+            plate1.scale.set(20, 1, 10);
+            let plate2 = new THREE.Mesh(boxGeometry, material);
+            plate2.scale.set(10, 1, 5);
+            plate2.position.set(0, 0, 7.5);
+            let plate3 = new THREE.Mesh(boxGeometry, material);
+            plate3.scale.set(10, 1, 5);
+            plate3.position.set(0, 0, -7.5);
+
+            let round1 = new THREE.Mesh(cylinderGeometry, material);
+            round1.position.set(5, 0, 5);
+            let round2 = new THREE.Mesh(cylinderGeometry, material);
+            round2.rotation.x = Math.PI;
+            round2.position.set(5, 0, -5);
+            let round3 = new THREE.Mesh(cylinderGeometry, material);
+            round3.rotation.z = Math.PI;
+            round3.position.set(-5, 0, 5);
+            let round4 = new THREE.Mesh(cylinderGeometry, material);
+            round4.rotation.x = Math.PI;
+            round4.rotation.z = Math.PI;
+            round4.position.set(-5, 0, -5);
+
+
+            roundedPlate.add(plate1, plate2, plate3, round1, round2, round3, round4);
+
+            roundedPlate.rotation.x += Math.PI/2;
+			function animate(t)
+			{
+				roundedPlate.rotation.set(t/2, t/3, t/4);
+			}
+			
+		</script>
+	</body>
+</html>
+
+
