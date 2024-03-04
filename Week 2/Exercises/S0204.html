@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S0204 Пешка</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+	<script type="importmap">
+	  {
+		"imports": {
+		  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+		  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+		  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+		}
+	  }
+	</script>
+</head>
+<body>
+    <script type="module">
+		import * as THREE from "three";
+		import {vaxInit, scene} from "vax";
+			
+		vaxInit(animate);
+
+        let geometrySphere = new THREE.SphereGeometry(1, 32, 32);
+        let geometryCone = new THREE.CylinderGeometry(1, 2, 1);
+        let material = new THREE.MeshLambertMaterial();
+
+        let pawn = new THREE.Group();
+        scene.add(pawn);
+
+        let topSphere = new THREE.Mesh(geometrySphere, material);
+        topSphere.scale.set(10, 10, 10);
+
+        let neckSphere = new THREE.Mesh(geometrySphere, material);
+        neckSphere.scale.set(10, 3, 10);
+        neckSphere.position.set(0, -10, 0);
+
+        let bodyCylinder = new THREE.Mesh(geometryCone, material);
+        bodyCylinder.scale.set(5, 25, 5);
+        bodyCylinder.position.set(0, -25, 0);
+
+		let legs = new THREE.Mesh(new THREE.SphereGeometry(16, 32, 16, 0, 2 * Math.PI, 0, Math.PI/2), material);
+		legs.scale.set(1, 0.5, 1);
+        legs.position.y = -40;
+
+		let bottom = new THREE.Mesh(new THREE.CircleGeometry(16, 32), material);
+        bottom.rotation.x += Math.PI/2;
+        bottom.position.set(0, -40, 0);
+
+
+        pawn.position.y = 20;
+        pawn.add(bodyCylinder, topSphere, neckSphere, legs, bottom);
+		function animate(t)
+		{
+            pawn.rotation.set(t/3, t/4, t/5);
+		}
+    </script>
+</body>
+</html>

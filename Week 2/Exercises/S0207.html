@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0207 Остра ограда</title>
+    <script type="importmap">
+        {
+        "imports": {
+          "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+          "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+        }
+      }
+    </script>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from "three";
+        import {vaxInit, scene} from "vax";
+
+        vaxInit(frame);
+
+        let material = new THREE.MeshPhongMaterial();
+        
+        let geometryCube = new THREE.BoxGeometry(1, 1, 1);
+
+        let fence = new THREE.Group();
+        // fence.scale.set(2, 2, 2);
+        // scene.add(fence);
+        
+        let fenceSide = new THREE.Group();
+        // scene.add(fenceSide);
+
+        let fullFence = new THREE.Group();
+        fullFence.scale.set(1.5, 1.5, 1.5);
+        scene.add(fullFence);
+
+        let fenceBase = new THREE.Mesh(geometryCube, material);
+        fenceBase.scale.set(4, 8, 0.5);
+        let fenceTop = new THREE.Mesh(geometryCube, material);
+        fenceTop.scale.set(Math.sqrt(8), Math.sqrt(8), 0.5);
+        fenceTop.rotation.z = Math.PI/4;
+        fenceTop.position.y = 4;
+        fence.add(fenceBase, fenceTop);
+
+        for (let index = 0; index < 11; index++) {
+            let f1 = fence.clone();
+            f1.position.x = -25 + index*5; // 0 -> 50 // -25 -> 25
+            fenceSide.add(f1);
+        }
+
+        let fenceBackTop = new THREE.Mesh(geometryCube, material);
+        fenceBackTop.scale.set(55, 1, 0.5);
+        fenceBackTop.position.set(0, 2, -0.5);        
+        let fenceBackBottom = new THREE.Mesh(geometryCube, material);
+        fenceBackBottom.scale.set(55, 1, 0.5);
+        fenceBackBottom.position.set(0, -2, -0.5);
+        
+        fenceSide.add(fenceBackTop, fenceBackBottom);
+
+        for (let index = 0; index < 4; index++) {
+            let f1 = fenceSide.clone();
+            f1.rotation.y = index * Math.PI / 2;
+            f1.position.set(28*Math.sin(Math.PI*index/2), 0, 28*Math.cos(Math.PI*index/2));
+            fullFence.add(f1);
+        }
+
+        function frame(time) {
+            // fullFence.rotation.set(0.2*time, 0.3*time,  0.4*time);
+            fullFence.rotation.y = 0.3*time;
+        }
+    </script>
+</body>
+</html>

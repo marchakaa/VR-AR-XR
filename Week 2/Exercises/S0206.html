@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S0206 Керамична чаша</title>
+    <script type="importmap">
+        {
+		"imports": {
+		  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+		  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+		  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+		}
+	  }
+    </script>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from "three";
+        import {vaxInit, scene} from "vax";
+
+        vaxInit(frame);
+
+        let material = new THREE.MeshLambertMaterial();
+
+        let mug = new THREE.Group();
+        mug.scale.set(1.5, 1.5, 1.5);
+        scene.add(mug);
+
+        let outer = new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 20, 32, 32, 0), material);
+        let inner = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 20, 32, 32, 0), new THREE.MeshLambertMaterial());
+        inner.material.side = THREE.BackSide;
+        let bottom = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 2, 32, 32), material);
+        bottom.rotation.y = Math.PI/2;
+        bottom.position.y = -10;
+
+        let top = new THREE.Mesh(new THREE.TorusGeometry(9, 1, 32, 32), material);
+        top.rotation.x = Math.PI/2;
+        top.position.y = 10;
+        let bottomTorus = new THREE.Mesh(new THREE.TorusGeometry(9, 1, 32, 32), material);
+        bottomTorus.rotation.x = Math.PI/2;
+        bottomTorus.position.y = -10;
+
+        let holder = new THREE.Mesh(new THREE.TorusGeometry(7, 1, 32, 32), material);
+		// holder.rotation.set(Math.PI/2, 0, 0, 'YXZ');
+        holder.scale.set(0.7, 1, 1.9);
+		holder.position.set(12, 0, 0);
+        // holder.rotation.z = 4*Math.PI/3;
+
+        mug.add(outer, inner, top, bottom, bottomTorus, holder);
+        function frame(t) {
+            mug.rotation.set(0.2*t, 0.3*t, 0.4*t);
+        }
+    </script>
+</body>
+</html>

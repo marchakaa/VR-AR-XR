@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S0205 Верига</title>
+    <script type="importmap">
+        {
+		"imports": {
+		  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+		  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+		  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+		}
+	  }
+    </script>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from "three";
+        import {vaxInit, scene} from "vax";
+
+        vaxInit(frame);
+
+        let material = new THREE.MeshLambertMaterial();
+
+        let chain = new THREE.Group();
+        chain.scale.set(1.5, 1.5, 1.5);
+        scene.add(chain);
+        
+        let left = new THREE.Mesh(new THREE.TorusGeometry(10, 5, 32, 32, Math.PI), material);
+        left.rotation.z = Math.PI/2;
+        left.position.x -= 10;
+        let right = new THREE.Mesh(new THREE.TorusGeometry(10, 5, 32, 32, Math.PI), material);
+        right.rotation.z -= Math.PI/2;
+        right.position.x += 10;
+        
+        let middle = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 20, 32), material);
+        middle.rotation.z += Math.PI/2;
+        middle.position.set(0, 10, 0);
+        let leftCylinder = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 8, 32), material);
+        leftCylinder.rotation.z += Math.PI/2;
+        leftCylinder.position.set(-6, -10, 0);
+        let rightCylinder = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 8, 32), material);
+        rightCylinder.rotation.z += Math.PI/2;
+        rightCylinder.position.set(6, -10, 0);
+        
+
+        chain.add(left, right, middle, leftCylinder, rightCylinder);
+
+        function frame(time) {
+            chain.rotation.set(0.2*time, 0.3*time, 0.4*time);
+        }
+
+    </script>
+</body>
+</html>

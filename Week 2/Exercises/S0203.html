@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S0203 Клечка за уши</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+	<script type="importmap">
+	  {
+		"imports": {
+		  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+		  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+		  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+		}
+	  }
+	</script>
+</head>
+<body>
+    <script type="module">
+		import * as THREE from "three";
+		import {vaxInit, scene} from "vax";
+			
+		vaxInit(animate);
+
+        let geometryCylinder = new THREE.CylinderGeometry(1, 1, 1, 32);
+        let sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
+        let material = new THREE.MeshLambertMaterial();
+
+        let earStick = new THREE.Group();
+        earStick.scale.set(1.5, 1.5, 1.5);
+        scene.add(earStick);
+
+        let stick = new THREE.Mesh(geometryCylinder, material);
+        stick.scale.y = 30;
+        
+        let tipA = new  THREE.Mesh(sphereGeometry, material);
+        tipA.scale.set(2, 4, 2);
+        tipA.position.y = 17;
+        
+        let tipB = new  THREE.Mesh(sphereGeometry, material);
+        tipB.scale.set(2, 4, 2);
+        tipB.position.y = -17;
+        
+        earStick.add(stick, tipA, tipB);
+		function animate(t)
+		{
+			earStick.rotation.set(t/2, t/3, t/4);
+		}
+    </script>
+</body>
+</html>
