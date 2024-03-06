@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0303: Кръгова диаграма</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			// ---------------------------------------------
+			// Тук е само началото на решението. Може да го
+			// ползвате, ако искате да си спестите писането
+			// на периферен код. Ако силно желаете да имате
+			// опит с Three.js, по-добре започнете начисто.
+			// ---------------------------------------------
+			
+			import * as THREE from "three";
+			import {vaxInit, scene} from "vax";
+
+			vaxInit(animate);
+
+			// диаграма
+			let chart = new THREE.Group();
+			scene.add(chart);
+
+			let numbers = [10, 32, 15, 32, 102, 17, 29, 73, 13];
+
+			const sum = numbers.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+
+
+			
+			let rotation = 0;
+			for (let i = 0; i < numbers.length; i++) {
+				let dAngle = 2*Math.PI*numbers[i]/sum;
+
+				let geometry = new THREE.CylinderGeometry(40, 40, 20, 2+Math.round(10*dAngle), 1, false, rotation, dAngle);
+				let material = new THREE.MeshPhongMaterial({
+					color: new THREE.Color(THREE.MathUtils.randFloat(0.2, 1), THREE.MathUtils.randFloat(0.2, 1), THREE.MathUtils.randFloat(0.2, 1)),
+					shininess: 30
+				});
+
+				let segment = new THREE.Mesh(geometry, material);
+				chart.add(segment);
+				rotation += dAngle;
+
+			}
+
+
+			function animate(t)
+			{
+				chart.rotation.set(t/3, t, t/2);
+			}
+			
+		</script>
+	</body>
+</html>
+
+

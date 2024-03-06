@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0306: Слънце</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {vaxInit, scene} from "vax";
+
+			vaxInit(animate);
+
+			scene.background = new THREE.Color('black');
+
+			const N = 30;
+
+			let sun = new THREE.Group();
+			scene.add(sun);
+
+			// форма - икосаедър
+			let geometry = new THREE.IcosahedronGeometry(40, 1);
+
+			let suns = [];
+			for (let i = 0; i < N; i++) {
+				let material = new THREE.MeshLambertMaterial({
+				color: new THREE.Color().setHSL((THREE.MathUtils.randFloat(0.04, 0.12)), 1.5, 0.5),
+				emissive: 'orange',
+				emissiveIntensity: 0.5,
+				transparent: true,
+				opacity: 1 - i/(N+2)
+			});
+			suns[i] = new THREE.Mesh(geometry, material);
+			let s = 1+i/N/25;
+			suns[i].scale.set(s, s, s);
+			sun.add(suns[i]);
+
+			}
+
+
+			function animate(t)
+			{
+				for (var i = 0; i < N; i++)
+				{
+					suns[i].rotation.set(Math.cos(t/3+i)/2, Math.sin(t/4-i)/4, Math.sin(t/5+i*2)/2);
+				}
+				// въртим цялото слънце
+				sun.rotation.set(0, t/5, 0);
+			}
+			
+		</script>
+	</body>
+</html>
+
+

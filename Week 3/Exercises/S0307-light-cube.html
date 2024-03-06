@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0307: Светлинен куб</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			// ---------------------------------------------
+			// Тук е само началото на решението. Може да го
+			// ползвате, ако искате да си спестите писането
+			// на периферен код. Ако силно желаете да имате
+			// опит с Three.js, по-добре започнете начисто.
+			// ---------------------------------------------		
+				
+			import * as THREE from "three";
+			import {vaxInit, scene, light, camera} from "vax";
+
+			vaxInit(animate);
+
+			scene.background = new THREE.Color('black');
+
+			// земя
+			let ground = new THREE.Mesh(
+					new THREE.CylinderGeometry(160, 160, 1),
+					new THREE.MeshLambertMaterial({
+						color: 'indigo',
+					})
+			);
+			ground.position.y = -20;
+			scene.add(ground);
+
+			let cube = new THREE.Group();
+			cube.position.y = 30;
+			scene.add(cube);
+			// кубът
+			let box = new THREE.Mesh(
+					new THREE.BoxGeometry(30, 30, 30),
+					new THREE.MeshLambertMaterial({color: 'dimgray'})
+			);
+			// box.position.y = 20;
+			scene.add(box);
+			let light1 = new THREE.PointLight('yellow', 5000, 50);
+			light1.position.set(20, 20, 20);
+			let light2 = new THREE.PointLight('red', 5000, 50);
+			light2.position.set(-20, 20, 20);
+			let light3 = new THREE.PointLight('blue', 5000, 50);
+			light3.position.set(-20, 20, -20);
+			let light4 = new THREE.PointLight('white', 5000, 50);
+			light4.position.set(20, 20, -20);
+			let light5 = new THREE.PointLight('yellow', 5000, 50);
+			light5.position.set(-20, -20, -20);
+			let light6 = new THREE.PointLight('red', 5000, 50);
+			light6.position.set(20, -20, -20);
+			let light7 = new THREE.PointLight('blue', 5000, 50);
+			light7.position.set(20, -20, 20);
+			let light8 = new THREE.PointLight('white', 5000, 50);
+			light8.position.set(-20, -20, 20);
+				
+			cube.add(light1, light2, light3, light4, light5, light6, light7, light8);
+			scene.remove(light);
+
+			cube.add(box);
+			// слагаме удобна гледна точка
+			camera.position.set(100, 70, 0);
+			camera.lookAt(scene.position);
+
+			function animate(t)
+			{
+				scene.rotation.y = t/2;
+
+				// въртим куба
+				cube.rotation.set(t/4, t, t/3);
+			}
+			
+		</script>
+	</body>
+</html>
+
+

@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0304: Кули от кубчета</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {vaxInit, scene} from "vax";
+
+			vaxInit(animate);
+
+			const N = 10;
+
+			let geometry = new THREE.BoxGeometry(6, 6, 6);
+			let platform = new THREE.Mesh(
+					new THREE.BoxGeometry(100, 4, 100),
+					new THREE.MeshPhongMaterial({
+						color: 'white',
+						shininess: 20
+					})
+			);
+			platform.position.y = -35;
+			scene.add(platform);
+
+			scene.background = new THREE.Color('pink');
+
+			
+			function createTower() {
+				let n = THREE.MathUtils.randInt(3, 10);
+				let x = THREE.MathUtils.randInt(-45, 45);
+				let z = THREE.MathUtils.randInt(-45, 45);
+				for (let i = 0; i < n; i++) {
+					let cube = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({
+						shininess: 100,
+						color: new THREE.Color().setHSL(THREE.MathUtils.randFloat(0, 1), 1, 0.7)
+					}));
+					cube.rotation.y = THREE.MathUtils.randFloat(0, Math.PI/2);
+					cube.position.set(x, 6*i-30, z);
+					scene.add(cube);
+
+				}
+			}
+
+			for (let index = 0; index < N; index++) {
+				createTower();
+			}
+
+			scene.add(new THREE.AmbientLight('deeppink', 1.5));
+			function animate(t)
+			{
+				scene.rotation.set(0, t, 0);
+			}
+			
+		</script>
+	</body>
+</html>
+
+

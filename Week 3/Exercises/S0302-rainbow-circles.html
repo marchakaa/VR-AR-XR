@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0302: Окръжности на дъгата</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {vaxInit, scene} from "vax";
+			
+			vaxInit(animate);
+
+			let PI = Math.PI;
+
+			let geometry = new THREE.CircleGeometry(20, 60);
+
+			let rainbow = new THREE.Group();
+			rainbow.scale.set(0.8, 0.8, 0.8);
+			scene.add(rainbow);
+			
+
+			let colors = ["red", "orange", "yellow", "lime", "dodgerblue", "blueviolet"];
+			for (let i = 0; i < 6; i++) {
+				
+				let circle = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial());
+				circle.material.color.set(colors[i]);
+				circle.position.set(40*Math.cos(i*PI/3), 40*Math.sin(i*PI/3), 0); //40, 0; 
+				rainbow.add(circle);
+			}
+
+			let circle = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 'midnightblue'}));
+			rainbow.add(circle);
+
+			function animate(t)
+			{
+				rainbow.rotation.set(0, 0, t);
+			}
+			
+		</script>
+	</body>
+</html>
+
+

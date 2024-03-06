@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0208 Летяща чиния</title>
+    <script type="importmap">
+        {
+        "imports": {
+          "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+          "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+        }
+      }
+    </script>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from "three";
+        import {vaxInit, scene} from "vax";
+
+        vaxInit(frame);
+
+        let material = new THREE.MeshLambertMaterial();
+        let geometry = new THREE.SphereGeometry(30, 32, 32);
+
+        let ufo = new  THREE.Group();
+        scene.add(ufo);
+
+        let k = 1;
+
+        for (let index = 0; index < 30; index++) {
+            let ball = new THREE.Mesh(geometry, material);
+            ball.scale.set(k, 1/k, k);
+            k *= 1.03;
+            ufo.add(ball);
+        }
+
+        function frame(time) {
+            ufo.rotation.set(0.2*time, 0.3*time, 0.4*time);
+        }
+    </script>
+</body>
+</html>

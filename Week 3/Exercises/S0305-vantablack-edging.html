@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0305: Вантаблек кант</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {vaxInit, scene} from "vax";
+
+			vaxInit(animate);
+
+			const N = 3;
+
+			let ventablackCube = new THREE.Group();
+			scene.add(ventablackCube);
+
+			// куб
+			let shinyMaterial = new THREE.MeshPhongMaterial({
+				color: 'sandybrown',
+				shininess: 150,
+				emissive: 'sandybrown',
+				emissiveIntensity: 0.5
+			});
+			let matteMaterial = new THREE.MeshBasicMaterial({color: 'black'});
+			let geometryCube = new THREE.BoxGeometry(50-N*2, 50, 50-N*2);
+			let geometrySphere = new THREE.SphereGeometry(N, 32, 32);
+			let geometryCylinder = new THREE.CylinderGeometry(N, N, 50-N*2, 32, 16,  true);
+			
+			for (let i = 0; i < 4; i++) {
+				let cylinder = new THREE.Mesh(geometryCylinder, matteMaterial);
+				// cylinder.rotation.y = i*Math.PI/2;
+				cylinder.position.x = Math.pow(-1, Math.floor(i / 2))*(25 - N);
+				cylinder.position.z = Math.pow(-1, (i % 2))*(25 - N);
+				ventablackCube.add(cylinder);
+			}
+			for (let j = 0; j < 4; j++) {
+				let cylinder = new THREE.Mesh(geometryCylinder, matteMaterial);
+				cylinder.rotation.set(0*Math.PI/2, 0, Math.PI/2);
+				// cylinder.position.x = Math.pow(-1, Math.floor(j / 2))*(25 - N);
+				cylinder.position.y = Math.pow(-1, (j % 2))*(25 - N);
+				cylinder.position.z = Math.pow(-1, Math.floor(j / 2))*(25 - N);
+
+				ventablackCube.add(cylinder);
+			}
+			for (let j = 0; j < 4; j++) {
+				let cylinder = new THREE.Mesh(geometryCylinder, matteMaterial);
+				cylinder.rotation.set(Math.PI/2, 0, 0*Math.PI/2);
+				cylinder.position.x = Math.pow(-1, Math.floor(j / 2))*(25 - N);
+				cylinder.position.y = Math.pow(-1, (j % 2))*(25 - N);
+				// cylinder.position.z = Math.pow(-1, Math.floor(j / 2))*(25 - N);
+
+				ventablackCube.add(cylinder);
+			}
+			for (let i = 0; i < 8; i++) {
+				let sphere = new THREE.Mesh(geometrySphere, matteMaterial);
+				sphere.position.set(Math.pow(-1, (Math.floor(i/2)%2))*(25 - N), Math.pow(-1, i%2)*(25 - N), Math.pow(-1, Math.floor(i/4))*(25 - N));
+				ventablackCube.add(sphere);
+				console.log(sphere.position);
+			}
+
+			let cube = new THREE.Mesh(geometryCube, shinyMaterial);
+			let cube2 = cube.clone();
+			cube2.rotation.x = Math.PI/2;
+			let cube3 = cube.clone();
+			cube3.rotation.set(0, 0, Math.PI/2);
+			
+			ventablackCube.add(cube, cube2, cube3);
+			function animate(t)
+			{
+				ventablackCube.rotation.set(Math.sin(t)/3, t, Math.sin(2*t)/3);
+			}
+			
+		</script>
+	</body>
+</html>

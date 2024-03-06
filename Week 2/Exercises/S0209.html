@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0209 Въртящи се слънца</title>
+    <script type="importmap">
+        {
+        "imports": {
+          "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+          "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+        }
+      }
+    </script>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from "three";
+        import {vaxInit, scene} from "vax";
+
+        vaxInit(frame);
+        var pi = Math.PI;
+        var N = 15;
+
+        let material = new THREE.MeshLambertMaterial();
+        let geometryBody = new THREE.SphereGeometry(16, 32, 32);
+        let rayBody = new THREE.ConeGeometry(4, 30, 16);
+
+        let sun = new THREE.Group();
+
+        let sunBody = new THREE.Mesh(geometryBody, material);
+        sunBody.scale.set(0.5, 0.5, 0.05);
+
+        for (let index = 0; index < 12; index++) {
+            let ray = new THREE.Mesh(rayBody, material);            
+            ray.scale.set(0.5, 0.5, 0.05);
+            ray.position.set(12*Math.sin(pi*index/6), 12*Math.cos(pi*index/6), 0);
+            ray.rotation.z = -index*pi/6;
+            sun.add(ray);
+        }
+        sun.add(sunBody);
+
+        let sunArray = [];
+
+        for (let index = 0; index < N; index++) {
+            let sunClone = sun.clone();
+            sunClone.position.set(
+                THREE.MathUtils.randFloatSpread(100),
+                THREE.MathUtils.randFloatSpread(100),
+                THREE.MathUtils.randFloatSpread(100)
+            );
+            sunArray.push(sunClone);
+            scene.add(sunClone);
+        }
+
+        function frame(time) {
+            for (let index = 0; index < N; index++) {
+                sunArray[index].rotation.set(index + time/2, index-time/3, time);
+                
+            }
+        }
+    </script>
+</body>
+</html>

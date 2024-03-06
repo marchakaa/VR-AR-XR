@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>С0309: Урбанистична планета</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			// ---------------------------------------------
+			// Тук е само началото на решението. Може да го
+			// ползвате, ако искате да си спестите писането
+			// на периферен код. Ако силно желаете да имате
+			// опит с Three.js, по-добре започнете начисто.
+			// ---------------------------------------------		
+				
+			import * as THREE from "three";
+			import {vaxInit, renderer, scene, light} from "vax";
+
+			vaxInit(animate);
+			renderer.shadowMap.enabled = true;
+
+			scene.background = new THREE.Color(0x000F);
+			// планета
+			let planet = new THREE.Mesh(
+					new THREE.IcosahedronGeometry(30, 10),
+					new THREE.MeshPhongMaterial({color: 'brown'}));
+			planet.receiveShadow = true;
+			planet.castShadow = true;
+			planet.position.z = - 50;
+			scene.add(planet);
+
+			// мини-слънце
+			let sun = new THREE.Mesh(
+					new THREE.IcosahedronGeometry(3, 8),
+					new THREE.MeshBasicMaterial({color: 'gold'})
+			);
+			let sunLight = new THREE.PointLight('yellow', 5000, 100);
+			sunLight.castShadow = true;
+			sun.add(sunLight);
+			sun.position.set(70, 0, -50);
+			scene.add(sun);
+
+			let N = 40;
+			// сграда
+			let geometry = new THREE.BoxGeometry(10, 10, 10);
+			let material = new THREE.MeshPhongMaterial({
+					color: 'silver',
+					shininess: 100,
+					emissive: new THREE.Color('indigo'),
+					emissiveIntensity: 0.2,
+				});
+			for (let i = 0; i < N; i++) {
+				let size = THREE.MathUtils.randFloat(2, 4);
+				let building = new THREE.Mesh(geometry, material);
+				building.scale.set(0.4, 3*size, 0.4);
+				building.castShadow = true;
+				building.receiveShadow = true;
+				building.rotation.set(
+					THREE.MathUtils.randFloat(0, 2*Math.PI),
+					THREE.MathUtils.randFloat(0, 2*Math.PI),
+					THREE.MathUtils.randFloat(0, 2*Math.PI));
+				// building.position.set(0, 25 + size*5, 0);
+				planet.add( building );
+			}
+
+			var starGeometry = new THREE.PlaneGeometry(1, 1);
+			var starMaterial = new THREE.MeshBasicMaterial();
+			var stars = [];
+			for (var i = 0; i < 200; i++) // 200 май са достатъчно, а?
+			{
+				var scale = 2+1 * Math.sin(i);
+				stars[i] = new THREE.Mesh(starGeometry, starMaterial);
+				stars[i].position.set(THREE.MathUtils.randFloatSpread(2000), THREE.MathUtils.randFloatSpread(1000), -800);
+				stars[i].scale.set(scale, scale, scale);
+				scene.add(stars[i]);
+			}
+
+			scene.remove(light);
+
+			function animate(t)
+			{
+				
+				var i = Math.round(50 * t);
+				stars[i % stars.length].visible = true;
+				i += 5;
+				stars[i % stars.length].visible = false;
+				
+				planet.rotation.y = t/3;
+				sun.position.x = Math.cos(t/2)*70;
+				sun.position.z = Math.sin(t/2)*70 -50;
+			}
+			
+		</script>
+	</body>
+</html>
+
+

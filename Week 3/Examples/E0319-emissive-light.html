@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>E0319: Излъчвана светлина</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {TeapotGeometry} from "three/addons/geometries/TeapotGeometry.js";
+			import {vaxInit, renderer, camera, scene, light} from "vax";
+
+			vaxInit(animate);
+
+			// бял чайник
+			var geometry = new TeapotGeometry(7);
+			for (var i = 0; i < 16; i++)
+			{
+				var material = new THREE.MeshPhongMaterial({
+					color: 'white',
+					shininess: 500,
+					emissive: new THREE.Color().setHSL(3*i/16, 1, 0.5),
+					emissiveIntensity: 0.5
+				});
+				var teapot = new THREE.Mesh(geometry, material);
+				teapot.castShadow = true;
+
+				var alpha = 2*Math.PI*i/16;
+
+				teapot.position.setFromSphericalCoords(60, Math.PI/2, alpha);
+				teapot.rotation.set(0, Math.PI/2+alpha, 0);
+				scene.add(teapot);
+			}
+
+			// земя
+			geometry = new THREE.BoxGeometry(300, 2, 300);
+			var material = new THREE.MeshPhongMaterial({color: 'lightgreen'});
+			var ground = new THREE.Mesh(geometry, material);
+			ground.position.set(0, -8, 0);
+
+			scene.add(teapot, ground);
+
+			renderer.shadowMap.enabled = true;
+
+			camera.position.set(30, 50, 100);
+			camera.lookAt(scene.position);
+
+			// прожекторна светлина
+			scene.remove(light);
+			var newLight = new THREE.SpotLight('white', 20000);
+			newLight.angle = 0.8;
+			newLight.penumbra = 1;
+			newLight.position.set(0, 30, 0);
+			newLight.shadow.mapSize.width = 1024;
+			newLight.shadow.mapSize.height = 1024;
+			scene.add(newLight);
+
+			// насоченост на светлината
+			newLight.target = new THREE.Object3D();
+			scene.add(newLight.target);
+
+			newLight.castShadow = true;
+			ground.receiveShadow = true;
+
+			function animate(t)
+			{
+				newLight.position.setFromSphericalCoords(100, Math.PI/2, t);
+				newLight.position.y = 50;
+
+				newLight.target.position.setFromSphericalCoords(50, Math.PI/2, t);
+				newLight.target.position.y = 0;
+			}
+			
+		</script>
+	</body>
+</html>
+
+

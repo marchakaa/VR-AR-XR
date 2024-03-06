@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>E0311: Точкова светлина</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {TeapotGeometry} from "three/addons/geometries/TeapotGeometry.js";
+			import {vaxInit, scene, light} from "vax";
+
+			vaxInit(animate);
+
+			var geometry = new TeapotGeometry(30);
+			var material = new THREE.MeshPhongMaterial({
+				color: 'cornflowerblue',
+				shininess: 500,
+				side: THREE.DoubleSide
+			});
+			var teapot = new THREE.Mesh(geometry, material);
+
+			scene.add(teapot);
+
+			function animate(t)
+			{
+				teapot.rotation.set(0.5, t/2, 0);
+
+				// движим светлината нагоре-надолу
+				light.position.set(0, 150*Math.cos(3*t), 100);
+			}
+			
+		</script>
+	</body>
+</html>
+
+

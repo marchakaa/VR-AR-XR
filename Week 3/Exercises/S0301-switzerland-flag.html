@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0301: Швейцарско знаме</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {vaxInit, scene} from "vax";
+
+			vaxInit(animate);
+
+			let geometry = new THREE.BoxGeometry(90, 60, 3);
+			let material = new THREE.MeshLambertMaterial({color: 'red'});
+			let flag = new THREE.Mesh(geometry, material);
+
+			let geometry2 = new  THREE.BoxGeometry(30, 10, 3.01);
+			let material2 = new THREE.MeshLambertMaterial({color: "white"});
+			let plus1 = new THREE.Mesh(geometry2, material2);
+			let plus2 = plus1.clone();
+			plus2.rotation.z = Math.PI/2;
+
+			let flagGroup = new THREE.Group();
+			scene.add(flagGroup)
+			flagGroup.add(flag, plus1, plus2);
+
+			function animate(t)
+			{
+				flagGroup.rotation.set(Math.sin(t/4)/3, t, Math.cos(t/4)/3);
+			}
+			
+		</script>
+	</body>
+</html>
+
+
