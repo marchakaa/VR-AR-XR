@@ -119,7 +119,7 @@
         body.add(tail);
         const FEATHER_COUNT = 15;
         for (let index = 0; index < FEATHER_COUNT; index++) {
-            let pos = new THREE.Vector3(THREE.MathUtils.randFloat(4, 5), THREE.MathUtils.randFloat(1, 5), THREE.MathUtils.randFloat(-1.5, 1.5));
+            let pos = new THREE.Vector3(THREE.MathUtils.randFloat(4, 5), THREE.MathUtils.randFloat(1, 4.5), THREE.MathUtils.randFloat(-1.5, 1.5));
             let tailFeather = new THREE.Mesh(new THREE.BoxGeometry(4, 0.2, 1), new THREE.MeshPhongMaterial({color: 0x312922}));
             tailFeather.position.copy(pos);
             tailFeather.rotation.z += Math.PI/4;
