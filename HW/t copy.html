@@ -18,14 +18,15 @@
 <body>
     <script type="module">
         import * as THREE from 'three';
+		import * as TWEEN from "three/addons/libs/tween.module.js";
         import {vaxInit, scene, camera} from 'vax';
         vaxInit(frame);
         scene.background = new THREE.Color().setHSL(0.5, 0.5, 0.5);
 
         let COLOR_RED = 0xB82E14;
 
-        let floor = new THREE.Mesh(new THREE.BoxGeometry(500, 2, 500), new THREE.MeshBasicMaterial({color: 'green'}));
-        floor.position.y = -30;
+        let floor = new THREE.Mesh(new THREE.BoxGeometry(60, 2, 60), new THREE.MeshBasicMaterial({color: 'green'}));
+        // floor.position.y = -30;
         scene.add(floor);
 
         let rooster = new THREE.Group();
@@ -53,8 +54,8 @@
             eye.position.set(-4.5, 5.5, 0.75 - index*1.5);
             body.add(eye);
         }
-        let beakTop = new THREE.Mesh(new THREE.ConeGeometry(1, 2, 2, 1, true, 0, Math.PI), new THREE.MeshPhongMaterial({color: 'orange'}));
-        let beakBottom = new THREE.Mesh(new THREE.ConeGeometry(1, 2, 2, 1, true, 0, Math.PI), new THREE.MeshPhongMaterial({color: 'orange'}));
+        let beakTop = new THREE.Mesh(new THREE.ConeGeometry(1, 2, 2, 1, true, 0, Math.PI), new THREE.MeshPhongMaterial({color: 'orange', side: THREE.DoubleSide}));
+        let beakBottom = new THREE.Mesh(new THREE.ConeGeometry(1, 2, 2, 1, true, 0, Math.PI), new THREE.MeshPhongMaterial({color: 'orange', side: THREE.DoubleSide}));
         beakTop.scale.z = 0.75;
         beakBottom.scale.z = 0.75;
         beakTop.rotation.z += Math.PI/2;
@@ -83,6 +84,18 @@
 
         let faceBand = new THREE.Mesh(new THREE.BoxGeometry(0.01, 2, 1.5), new THREE.MeshPhongMaterial({color: 'red'}));
         faceBand.position.set(-6.005, 6, 0);
+
+        let wings = [];
+        for (let index = 0; index < 2; index++) {
+            let wing = new  THREE.Mesh(new THREE.CylinderGeometry(3, 3, 0.4, 3, 1), new THREE.MeshPhongMaterial({color: COLOR_RED}));
+            wing.position.z = 2.7 - index*2.7*2;
+            wing.rotation.x += Math.PI/2;
+            wing.rotation.y += Math.PI/6;
+            wings.push(wing);
+            body.add(wing);
+            
+        }
+
         body.add(bodyRed, bodyBlack, neckBlack, head, beakTop, beakBottom, headBand, preLegs, faceBand);
 
 
@@ -135,15 +148,39 @@
             
         }
 
+
+        const GRASS_COUNT= 1000;
+        for (let index = 0; index < GRASS_COUNT; index++) {
+            let grass = new THREE.Mesh(new THREE.BoxGeometry(0.1, 6, 0.1), new THREE.MeshPhongMaterial({color: 'green'}));
+            grass.rotation.x += Math.PI/THREE.MathUtils.randFloat(4, 6);
+            grass.rotation.y += Math.PI/THREE.MathUtils.randFloat(4, 6);
+            grass.position.set(THREE.MathUtils.randInt(-30, 30), 3, THREE.MathUtils.randInt(-30, 30));
+            scene.add(grass);
+        }
+
         rooster.rotation.y += Math.PI/2;
-        rooster.position.z = 40;
-        let l =  false;
+        rooster.rotation.z += 0.3;
+        rooster.position.y = 9;
+        camera.position.y = 20;
+        camera.position.z = 70;
+
+        const duration = 1000;
+        for (let index = 0; index < wings.length; index++) {
+            let tween1 = new TWEEN.Tween(wings[index].rotation).to({z: (1-2*index)*Math.PI/4}, duration);   
+            let tween2 = new TWEEN.Tween(wings[index].rotation).to({z: 0}, duration);
+
+            tween1.chain(tween2);
+            tween2.chain(tween1);
+
+            tween1.start();
+            
+        }
+
         function frame(t) {
             rooster.rotation.y = Math.sin(t/2)*2;
             body.rotation.z = Math.sin(t/2);
-
-            // camera.position.set(0, 0, 0)
-            // rooster.rotation.set(0.3*t, 0.4*t, 0.5*t);
+            TWEEN.update();
+            // beakTop.rotation.z = Math.sin(t/2);
         }
     </script>    
 </body>

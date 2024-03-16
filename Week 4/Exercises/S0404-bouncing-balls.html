@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>С0404: Топащи се топки</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			// ---------------------------------------------
+			// Тук е само началото на решението. Може да го
+			// ползвате, ако искате да си спестите писането
+			// на периферен код. Ако силно желаете да имате
+			// опит с Three.js, по-добре започнете начисто.
+			// ---------------------------------------------		
+		
+			import * as THREE from "three";
+			import * as TWEEN from "three/addons/libs/tween.module.js";
+			import {vaxInit, renderer, light, camera, scene} from "vax";
+
+
+			vaxInit(animate);
+
+			renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+			light.intensity = 4;
+
+			scene.add(new THREE.AmbientLight('yellow', 0.3));
+
+			// сцена със случайни сфери
+			var geometry = new THREE.SphereGeometry(5);
+			for (var i = 0; i < 30; i++)
+			{
+				var material = new THREE.MeshPhongMaterial();
+				material.color = new THREE.Color(Math.random(), Math.random(), Math.random());
+				material.shininess = 100;
+				
+				var mesh = new THREE.Mesh(geometry, material);
+				mesh.position.set(THREE.MathUtils.randFloat(-30, 30), THREE.MathUtils.randFloat(0, 40), THREE.MathUtils.randFloat(-30, 30));
+
+				scene.add(mesh);
+			}
+
+			function animate(t)
+			{
+				scene.rotation.y = t;
+			}
+			
+		</script>
+	</body>
+</html>
+
+

@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0408: Свободна разходка</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			// ---------------------------------------------
+			// Тук е само началото на решението. Може да го
+			// ползвате, ако искате да си спестите писането
+			// на периферен код. Ако силно желаете да имате
+			// опит с Three.js, по-добре започнете начисто.
+			// ---------------------------------------------		
+		
+			import * as THREE from "three";
+			import * as TWEEN from "three/addons/libs/tween.module.js";
+			import {FirstPersonControls} from "three/addons/controls/FirstPersonControls.js";
+			import {vaxSceneInit, Pillar, renderer, camera, scene, object} from "vax";
+
+			vaxSceneInit(animate);
+
+			camera.position.set(100, 10, 100);
+			camera.lookAt(new THREE.Vector3(0, 30, 0));
+
+			// координати на началната точка на движението
+			var p = new THREE.Vector3(-50, 20, 0);
+
+			// координати на крайната точка на движението
+			var q = new THREE.Vector3(50, 20, 0);
+			
+			// два пилона 
+			scene.add(new Pillar(p));
+			scene.add(new Pillar(q));
+
+			// и още няколко на случайни места
+			for (var i = 0; i < 10; i++)
+			{
+				scene.add(new Pillar(
+						new THREE.Vector3(THREE.MathUtils.randFloat(-80, 80), 10, THREE.MathUtils.randFloat(-80, 80)), ));
+			}
+			
+			function animate(t)
+			{
+				// движение по k
+				var k = 0.5 + 0.5*Math.sin(3*t);
+				object.position.lerpVectors(p, q, k);
+				camera.position.y = 10;
+
+				// въртене на обекта
+				object.rotation.y = -5*t;
+			}
+			
+		</script>
+	</body>
+</html>
+
+
