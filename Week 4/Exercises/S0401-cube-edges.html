@@ -65,11 +65,23 @@
 						roughness: 0
 					})
 				);
-			scene.add(ball);
+			let vectors =  []
+			for (let index = 0; index < 8; index++) {
+				let vector = new THREE.Vector3(Math.pow(-1, Math.floor(index/2))*27.5, Math.pow(-1, Math.floor(index/4))*27.5, Math.pow(-1, index)*27.5);
+				vectors.push(vector)
+			}
+			console.log(vectors);
+			ball.position.set(27.5, 27.5, 27.5);
+			cube.add(ball);
+			// scene.add(ball);
+
+			
 
 			function animate(t)
 			{
 				// въртене на куба
+				ball.position.copy(vectors[Math.floor(t%8)]);
+				console.log(ball.position, t, Math.floor(t/8));
 				cube.rotation.set(t/11, t/9, t/7);
 			}
 			
