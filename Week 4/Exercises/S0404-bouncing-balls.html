@@ -40,8 +40,12 @@
 
 			scene.add(new THREE.AmbientLight('yellow', 0.3));
 
+			let balls = [];
+			let heights = [];
 			// сцена със случайни сфери
 			var geometry = new THREE.SphereGeometry(5);
+			let ballGroup = new THREE.Group();
+			scene.add(ballGroup);
 			for (var i = 0; i < 30; i++)
 			{
 				var material = new THREE.MeshPhongMaterial();
@@ -49,14 +53,55 @@
 				material.shininess = 100;
 				
 				var mesh = new THREE.Mesh(geometry, material);
-				mesh.position.set(THREE.MathUtils.randFloat(-30, 30), THREE.MathUtils.randFloat(0, 40), THREE.MathUtils.randFloat(-30, 30));
+				let y = THREE.MathUtils.randFloat(0, 40);
+				mesh.position.set(THREE.MathUtils.randFloat(-30, 30), y, THREE.MathUtils.randFloat(-30, 30));
 
-				scene.add(mesh);
+				heights.push(y + 30);
+				balls.push(mesh);
+				ballGroup.add(mesh);
 			}
 
+			for (let index = 0; index < balls.length; index++) {
+				// let duration = heights[index]*50;
+				let duration = 500;
+				let targetPosition = {y:-30};
+				let bouncePosition = {y: Math.floor(heights[index]*2/3 - 30)};
+				let tween1 = new TWEEN.Tween(balls[index].position).to(targetPosition, duration)
+				.delay(THREE.MathUtils.randInt(2000, 4000))
+				.onComplete(() => {
+						bouncePosition = {y: Math.floor(heights[index]*2/3 - 30)};
+						duration = Math.floor(duration*4/5);
+						tween2.to(bouncePosition, duration);
+						if(heights[index] > 0) {
+							tween2.start();
+						}
+					})
+					.easing(TWEEN.Easing.Quadratic.In);
+				let tween2 = new TWEEN.Tween(balls[index].position).to(bouncePosition, duration)
+					.onComplete(() => {
+						heights[index] = Math.floor(heights[index]*2/3);	
+						// duration *= 0.9;
+						tween1 = new TWEEN.Tween(balls[index].position).to(targetPosition, duration)
+						.onComplete(() => {
+							bouncePosition = {y: Math.floor(heights[index]*2/3 - 30)};
+							duration = Math.floor(duration*4/5);
+							tween2.to(bouncePosition, duration);
+							if(heights[index] > 0) {
+								tween2.start();
+							}
+						})
+						.easing(TWEEN.Easing.Quadratic.In);
+						tween1.start();
+					})
+					.easing(TWEEN.Easing.Quadratic.Out);
+
+
+				tween1.start();
+			}
 			function animate(t)
 			{
-				scene.rotation.y = t;
+				TWEEN.update();
+				ballGroup.rotation.y = t;
 			}
 			
 		</script>

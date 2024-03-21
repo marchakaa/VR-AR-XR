@@ -39,7 +39,9 @@
 			var data = {k: 0.5};
 			
 			var gui = new lil.GUI();
-			gui.add(data, 'k', 0, 1);
+			gui.add(data, 'k', 0, 1).onChange( value => {
+				console.log(value);
+			});
 
 			// координати на началната точка на движението
 			var p = new THREE.Vector3(-50, 10+50*Math.random(), 50);
@@ -59,7 +61,8 @@
 
 				// движение по k
 				object.position.lerpVectors(p, q, data.k);
-
+				gui.controllers[0].updateDisplay();
+				// gui.update();
 				// въртене на сцената и на обекта
 				object.rotation.y = -5*t;
 				scene.rotation.y = t/5;

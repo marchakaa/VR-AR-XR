@@ -30,13 +30,16 @@
 		
 			import * as THREE from "three";
 			import * as TWEEN from "three/addons/libs/tween.module.js";
-			import {vaxSceneInit, Pillar, scene, object} from "vax";
+			import {vaxSceneInit, Pillar, scene, object, camera} from "vax";
 
 			vaxSceneInit(animate);
 			
 			// k пилона в кръг
 			var k = 8; // брой пилони
 			var positions = [];
+			let pillarGroup = new THREE.Group();
+			pillarGroup.rotation.y = 2*Math.PI/9;
+			scene.add(pillarGroup);
 			var pillars = [];
 			for (var i = 0; i < k; i++)
 			{
@@ -44,13 +47,25 @@
 				positions[i].y = 50;
 
 				pillars[i] = new Pillar(positions[i]);
-				scene.add(pillars[i]);
+				pillarGroup.add(pillars[i]);
 			}
 
+
+			const DURATION = 1000;
+			for (let i = 0; i < pillars.length; i++) {
+				let tween1 = new TWEEN.Tween(pillars[i].scale).to({y: 0.5}, 0).delay(i*1000*Math.PI/4).onComplete(() => {
+					tween1.delay(1000*Math.PI*27	/16);
+				});
+				let tween2 = new TWEEN.Tween(pillars[i].scale).to({y: 1}, DURATION);
+				tween1.start();
+				tween1.chain(tween2);	
+				tween2.chain(tween1);
+			}
 
 			function animate( t )
 			{
 				// въртене на сцената и на обекта
+				TWEEN.update();
 				object.position.setFromSphericalCoords(80, Math.PI/2, t).setY(50);
 				object.rotation.y = t;
 

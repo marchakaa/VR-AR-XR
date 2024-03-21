@@ -27,7 +27,7 @@
         scene.add(floor);
 
         let bear = new THREE.Group();
-        scene.add(bear);
+        // scene.add(bear);
         let bearMaterial = new THREE.MeshPhongMaterial({color: 'brown'});
 
         let body = new THREE.Mesh(new THREE.BoxGeometry(12, 15, 12), bearMaterial);
@@ -81,9 +81,20 @@
             leg.add(mainLeg);
         }
 
+        let gr = new THREE.Group();
+        let t3 = new THREE.Mesh(new THREE.BoxGeometry(5, 10, 5), new THREE.MeshPhongMaterial({color: 'black'}));
+        let t2 = new THREE.Mesh(new THREE.BoxGeometry(5, 4, 5), new THREE.MeshPhongMaterial());
+        t2.rotation.z += Math.PI/6;
+        t2.position.set(-3.5, 2, 0);
+        gr.add(t3, t2);
+        scene.add(gr);
+        gr.rotation.y = Math.PI/4;
 
         bear.add(body, tummy, bearHead, leg);
         function frame(t) {
+            // gr.rotation.y = 0.4*t;
+            // gr.rotation.set(0.5*t, 0.4*t, 0.3*t);
+            // t2.rotation.set(0.5*t, 0.4*t, 0.3*t);
             bear.rotation.y = t/5;
         }
     </script>    

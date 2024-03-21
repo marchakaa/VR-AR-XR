@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Тест №1: Имплементация</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax-test-1.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import * as lil from "three/addons/libs/lil-gui.module.min.js";
+			import {scene, object as p, pose} from "vax";
+			
+			pose.randomize = randomize;
+			pose.solve = solve;
+			pose.alpha = 60;
+			pose.beta = 110;
+			
+			// интерактивно контролиране на ъглите
+			var gui = new lil.GUI();
+			gui.add(pose, 'randomize').name('Наново');
+			gui.add(pose, 'alpha', 0, 180).name('&alpha;').step(0.1).decimals(1).listen();
+			gui.add(pose, 'beta', -180, 180).name('&beta;').step(0.1).decimals(1).listen();
+			gui.add(pose, 'solve').name('Реши!');
+			
+			function randomize()
+			{
+				p.position.x = THREE.MathUtils.randFloat(-80, 80);
+				p.position.y = THREE.MathUtils.randFloat(20, 70);
+				
+				//solve();
+			}
+			
+			randomize();
+			
+			function animate()
+			{
+				a.rotation.z = THREE.MathUtils.degToRad( pose.alpha-90 );
+				b.rotation.z = THREE.MathUtils.degToRad( 180-pose.beta );
+				
+				control.update();
+			}
+			
+			randomize();
+			
+			
+			// НЕ ПРОМЕНЯЙТЕ КОДА НАД ТОЗИ КОМЕНТАР
+			// ТАКА ВСИЧКИ РЕШЕНИЯ ЩЕ СА СЪИЗМЕРИМИ
+// ПРОМЕНЯЙТЕ САМО ВЪВ ФУНКЦИЯТА SOLVE!
+//
+// основата на робота е в точка (0,0,0)
+// двата сегмента на робота са дълги 40
+//
+// p 			овалният обект, който трябва да се достигне
+// p.position	позицията в пространството на овалния обект
+// pose.alpha	ъгъл алфа в градуси (от 0 до 180)
+// pose.beta	ъгъл бета в градуси (от -180 до 180)
+
+			function solve()
+			{
+				// alert('Във функцията solve() сложете своето решение от листа.');
+				// alert('Ако не работи, го направете да работи, доразвивайки идеята си от листа.');
+				let dist = p.position.distanceTo(new THREE.Vector3(0,0,0))
+				//ако не може да бъде достигнато
+				console.log(p.position);
+				if(dist > 80) {
+					pose.beta = 180;
+					pose.alpha = THREE.MathUtils.radToDeg(Math.asin(p.position.y/dist));
+					if(p.position.x < 0) pose.alpha = 180 - pose.alpha;
+					
+					console.log(p.position.distanceTo(new THREE.Vector3(0,0,0)) > 80);
+				} else {
+					for (let i = 0; i <= 180; i+=0.1) {
+						for (let j = -180; j <= 180; j+=0.1) {
+							pose.alpha = i;
+							pose.beta = j;
+							let b = {x: Math.cos(THREE.MathUtils.degToRad(pose.alpha))*40, y: Math.sin(THREE.MathUtils.degToRad(pose.alpha))*40, z: 0}		
+							// console.log(b);
+						}
+					}
+				}
+				
+				pose.alpha = 45;
+				// pose.beta = 90;
+			}
+			
+		</script>
+	</body>
+</html>
+
+

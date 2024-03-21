@@ -65,23 +65,51 @@
 						roughness: 0
 					})
 				);
+			cube.add(ball);
 			let vectors =  []
 			for (let index = 0; index < 8; index++) {
 				let vector = new THREE.Vector3(Math.pow(-1, Math.floor(index/2))*27.5, Math.pow(-1, Math.floor(index/4))*27.5, Math.pow(-1, index)*27.5);
 				vectors.push(vector)
 			}
-			console.log(vectors);
-			ball.position.set(27.5, 27.5, 27.5);
-			cube.add(ball);
-			// scene.add(ball);
 
-			
+			ball.position.add(vectors[0]);
+
+			const STEPS = 55;
+			let steps = STEPS;
+			let currentPosition = vectors[0].clone();
+			console.log(vectors[0]);
+			let vector = vectors[1].sub(ball.position).divideScalar(steps);
+
 
 			function animate(t)
 			{
-				// въртене на куба
-				ball.position.copy(vectors[Math.floor(t%8)]);
-				console.log(ball.position, t, Math.floor(t/8));
+				if(steps) {
+					ball.position.add(vector);
+					steps--;
+				} else {
+					// console.log("Previous position:", currentPosition);
+					let nextPosition = ball.position.clone();
+					if(nextPosition.distanceTo(currentPosition) > 0) {
+						let next = THREE.MathUtils.randInt(0, 2);
+						switch (next) {
+						case 0:
+							nextPosition = nextPosition.multiply(new THREE.Vector3(-1, 1, 1));
+							break;
+						case 1:
+							nextPosition = nextPosition.multiply(new THREE.Vector3(1, -1, 1));
+							break;
+						case 2:
+							nextPosition = nextPosition.multiply(new THREE.Vector3(1, 1, -1));
+							break;
+					
+						}
+						// console.log("Next position:", nextPosition);
+						steps = STEPS;
+						vector = nextPosition.sub(ball.position).divideScalar(steps);
+
+						currentPosition = ball.position.clone();
+					}
+				}
 				cube.rotation.set(t/11, t/9, t/7);
 			}
 			

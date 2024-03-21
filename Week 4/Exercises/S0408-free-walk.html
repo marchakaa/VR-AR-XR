@@ -55,6 +55,82 @@
 						new THREE.Vector3(THREE.MathUtils.randFloat(-80, 80), 10, THREE.MathUtils.randFloat(-80, 80)), ));
 			}
 			
+			// Assuming `camera` is your Three.js camera object
+			// camera.position.add(cameraDirection);
+			
+			window.addEventListener('keydown', onKeyDown, false);
+			window.addEventListener('pointerdown', onPointerDown, false);
+			window.addEventListener('pointermove', onPointerMove, false);
+			window.addEventListener('pointerup', onPointerUp, false);
+			window.addEventListener('contextmenu', onContextMenu, false);
+
+			let mouseButton = false;
+			let mouseX;
+			let mouseY;
+			function onPointerDown(event) {
+				mouseButton = event.which;
+				mouseX = event.clientX;
+				mouseY = event.clientY;
+			}
+			camera.lookAt(new THREE.Vector3(0,10, 0));
+
+			var alpha = 0.1;
+			var beta = 1.1;
+			var distance = 150;
+			function onPointerMove(event) {
+				if (!mouseButton) {
+					return;
+				}
+								// изчисляване колко се е преместила мишката
+				var dX = event.clientX - mouseX;
+				var dY = event.clientY - mouseY;
+				camera.rotation.y += dX/1000;
+
+				// натиснат е ляв бутон
+				if (mouseButton == 1)
+				{
+					alpha = alpha - dX / 100;
+					beta = THREE.MathUtils.clamp(beta-dY/100, 0.1, 1.4);
+				}
+
+				// натиснат е десен бутон
+
+				// запомняме къде е мишката
+				mouseX = event.clientX;
+				mouseY = event.clientY;
+				// camera.position.setFromSphericalCoords(dis+tance, beta, alpha);
+				// camera.lookAt(new THREE.Vector3(0, 20*distance/150, 0));
+			}
+
+			function onPointerUp(event) {
+				mouseButton = false;
+			}
+			
+			function onContextMenu(event)
+			{
+				event.preventDefault();
+			}
+
+			function onKeyDown(event) {
+				const cameraDirection = new THREE.Vector3();
+				camera.getWorldDirection(cameraDirection);
+				// Check if the pressed key is 'W' (uppercase or lowercase)
+				let sideVector = new THREE.Vector3(cameraDirection.z, cameraDirection.y, cameraDirection.x);
+				if (event.key === 'W' || event.key === 'w') {
+					console.log('w')
+					camera.position.add(cameraDirection);
+				}
+				if (event.key === 'S' || event.key === 's') {
+					camera.position.sub(cameraDirection);
+				}
+				if (event.key === 'D' || event.key === 'd') {
+					camera.position.add(sideVector);
+				}
+				if (event.key == 'A' || event.key === 'a') {
+					camera.position.sub(sideVector);
+				}
+			}
+
 			function animate(t)
 			{
 				// движение по k
@@ -64,6 +140,7 @@
 
 				// въртене на обекта
 				object.rotation.y = -5*t;
+				
 			}
 			
 		</script>

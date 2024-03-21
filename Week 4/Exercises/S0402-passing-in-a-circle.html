@@ -51,8 +51,10 @@
 			// топче A
 			var ballA = new THREE.Mesh(
 					new THREE.SphereGeometry(5),
-					new THREE.MeshLambertMaterial({
-						color: 'dodgerblue'
+					new THREE.MeshPhongMaterial({
+						color: 'skyblue',
+						emissive: 'purple',
+						emissiveIntensity: 0.2
 					})
 				);
 			ballA.position.x = 20;
@@ -61,15 +63,31 @@
 			// топче B
 			var ballB = new THREE.Mesh(
 					new THREE.SphereGeometry(5),
-					new THREE.MeshLambertMaterial({
-						color: 'deeppink'
+					new THREE.MeshPhongMaterial({
+						color: 'pink',
+						emissive: 'red',
+						emissiveIntensity: 0.2
 					})
 				);
 			ballB.position.x = -20;
 			scene.add(ballB)
 
+			let counter = 0;
 			function animate(t)
 			{
+				// -5.5*Math.abs(Math.sin(t*2))
+				ballA.position.set(20*Math.cos(t*2),0,20*Math.sin(t*2));
+				ballB.position.set(-20*Math.cos(t*2),0,20*Math.sin(t*2));
+				// console.log(Math.cos(t));
+
+				if(ballA.position.distanceTo(ballB.position) < 5*Math.PI) {
+					console.log(ballA.position.distanceTo(ballB.position));
+					ballA.position.y = 5.5*Math.sin(counter/5);
+					ballB.position.y = -5.5*Math.sin(counter/5);
+					counter++;
+				} else {
+					counter = 0;
+				}
 
 			}
 

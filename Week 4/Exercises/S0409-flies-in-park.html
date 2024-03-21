@@ -113,20 +113,51 @@
 			}
 			
 			// Изчисляване на движението
-			pos = new THREE.Vector3();
+			// pos = new THREE.Vector3();
+			fly = flies[0];
+			console.log((fly.position.setFromSphericalCoords(20 + 10*Math.sin(0.8*3), Math.PI/2, 2*3+fly.offset).add(lamp2.position)))
+			// Define the spherical coordinates
+			var radius = 20 + 10 * Math.sin(0.8 * 3); // Example values for radius, phi, and theta
+			var phi = Math.PI / 2;
+			var theta = 2 * 3 + fly.offset;
+
+			// Calculate the position using setFromSphericalCoords
+			var position = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta).add(lamp2.position);
+			console.log(position)
+
 
 			function animate(t)
 			{
 
 				for (var i = 0; i < n; i++)
 				{
+					// console.log(t);
 					fly = flies[i];
 
-					var radius = 20 + 10*Math.sin(0.8*t+i*i);
-					var height = 60 + 10*Math.sin(2.1*t-i);
+					let radius = 20 + 10*Math.sin(0.8*t+i*i);
+					let height = 60 + 10*Math.sin(2.1*t-i);
+					let phi = Math.PI/2;
+					let theta = 2*t + fly.offset;
 
 					// позиция на мухата
-					fly.position.setFromSphericalCoords(radius, Math.PI/2, 2*t+fly.offset).add(lamp1.position);
+					if(t % 6 <= 2) {
+						fly.position.setFromSphericalCoords(radius, phi, theta).add(lamp1.position);
+					} else if(t % 6 <= 3) {
+						let targetPosition = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta).add(lamp2.position);
+						let movementVector = targetPosition.sub(fly.position).divideScalar(4);
+						fly.position.add(movementVector);
+						// fly.position.x += 2.25;
+						
+						// console.log(123);
+					} else if(t % 6 <= 5) {
+						fly.position.setFromSphericalCoords(radius, phi, theta).add(lamp2.position);
+					} else {
+						// fly.position.x -= 2.25;
+						let targetPosition = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta).add(lamp1.position);
+						let movementVector = targetPosition.sub(fly.position).divideScalar(4);
+						fly.position.add(movementVector);
+						// console.log(456);
+					}
 					fly.position.y = height;
 				}
 

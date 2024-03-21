@@ -40,6 +40,8 @@
 			scene.add( new THREE.AmbientLight( 'yellow', 0.3 ) );
 			
 			// сцена със случайни сфери, запомнени в масива balls
+			let ballsGroup = new THREE.Group();
+			scene.add(ballsGroup);
 			var balls = [];
 			var geometry = new THREE.SphereGeometry( 8 );
 			for( var i=0; i<40; i++)
@@ -52,17 +54,53 @@
 				ball.position.set( THREE.MathUtils.randFloat(-40,40), THREE.MathUtils.randFloat(-30,30), THREE.MathUtils.randFloat(-40,40) );
 				
 				balls.push( ball );
-				scene.add( ball );
+				ballsGroup.add(ball);				
 			}
 
 			
 			// създаване на панел
 			var gui = new lil.GUI();
+			let data = {
+				redFunction: function red() {
+					for (let i = 0; i < balls.length; i++) {
+						balls[i].material.color.setHex(0xFF0000);
+					}
+				},
+				greenFunction: function green() {
+					for (let i = 0; i < balls.length; i++) {
+						balls[i].material.color.setHex(0x00FF00);
+					}
+				},
+				blueFunction: function blue() {
+					for (let i = 0; i < balls.length; i++) {
+						balls[i].material.color.setHex(0x0000FF);
+					}
+				},
+				color: new THREE.Color(0xFFFFFF)
+			};
+			gui.add(data, 'redFunction').name('Red');
+			gui.add(data, 'greenFunction').name('Green');
+			gui.add(data, 'blueFunction').name('Blue');
+			gui.addColor(data, 'color').name('Цвят').onChange(
+				// слухтим за промяна на цвета и когато настъпи,
+				// сменяме цвета; алтернативата е в animate() да
+				// прехвърляме цвета на всеки кадър - излишно е
+				function (value)
+				{
+					for (let index = 0; index < balls.length; index++) {
+						console.log(value);
+						balls[index].material.color.setHex(value);
+					}
+				}
+			);
 			
+			function changeColor(color) {
+				console.log(color);
+			}
 			
 			function animate( t )
 			{
-				scene.rotation.y = t;
+				ballsGroup.rotation.y = t;
 			}
 			
 		</script>
