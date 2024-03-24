@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0501: Планета с дървета</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {vaxInit, scene, light} from "vax";
+
+			vaxInit(animate);
+
+			light.intensity = 5;
+
+			// планета
+			var planet = new THREE.Mesh(
+					new THREE.SphereGeometry(35, 32, 32),
+					new THREE.MeshLambertMaterial({color: 'brown'}));
+			scene.add(planet);
+
+			const N = 50;
+			for (let i = 0; i < N; i++) {
+				let tree = new THREE.Group();
+				let wood = new THREE.Mesh(new THREE.ConeGeometry(2, 15, 32, 32), new THREE.MeshLambertMaterial({color: 0x783006}));
+				let  leaves = new THREE.Mesh(new THREE.IcosahedronGeometry(4, 0), new THREE.MeshLambertMaterial({color: 'green'}));
+				leaves.position.y += 4;
+				tree.add(wood);
+				tree.add(leaves);
+
+				let r = 2*Math.PI*i/N;
+				let random = THREE.MathUtils.randFloat(0, 2*Math.PI);
+				tree.position.set(40*Math.sin(r), 40*Math.cos(r), 0);
+				tree.rotation.set(0 , 0, Math.cos(r));
+				// tree.rotation.set(random, 0, -random)
+				// let spherical = new THREE.Spherical(39, rotation1, rotation2);
+				// tree.position.setFromSpherical(spherical);
+				planet.add(tree);
+
+			}
+
+			function animate(t)
+			{
+				// въртене на планетата
+				planet.rotation.set(t/2, t/3, t/4);
+			}
+			
+		</script>
+	</body>
+</html>
+
+

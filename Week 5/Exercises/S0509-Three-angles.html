@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0509: Три ъгъла</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import * as lil from "three/addons/libs/lil-gui.module.min.js";
+			import {vaxSceneInit, scene, ground, object, robotElement, Pillar} from "vax";
+
+			vaxSceneInit(animate);
+
+			// интерактивно контролиране на ъглите
+			var gui = new lil.GUI();
+			var angles = {
+				alpha: 0,
+				beta: 0,
+				gamma: 0
+			};
+			gui.add(angles, 'gamma', -360, 360).name('Хоризонтално').step(1);
+			gui.add(angles, 'beta', 0, 90).name('Вертикално').step(1);
+			gui.add(angles, 'alpha', -360, 300).name('Около оста').step(1);
+
+			// позиция
+			var p = new THREE.Vector3(0, 30, 0);
+
+			// пилон
+			scene.add(new Pillar(p));
+			
+			function animate(t)
+			{
+
+			}
+			
+		</script>
+	</body>
+</html>
+
+

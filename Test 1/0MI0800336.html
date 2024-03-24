@@ -76,6 +76,8 @@
 				// alert('Ако не работи, го направете да работи, доразвивайки идеята си от листа.');
 				let dist = p.position.distanceTo(new THREE.Vector3(0,0,0))
 				//ако не може да бъде достигнато
+				
+
 				console.log(p.position);
 				if(dist > 80) {
 					pose.beta = 180;
@@ -84,18 +86,61 @@
 					
 					console.log(p.position.distanceTo(new THREE.Vector3(0,0,0)) > 80);
 				} else {
-					for (let i = 0; i <= 180; i+=0.1) {
-						for (let j = -180; j <= 180; j+=0.1) {
-							pose.alpha = i;
-							pose.beta = j;
-							let b = {x: Math.cos(THREE.MathUtils.degToRad(pose.alpha))*40, y: Math.sin(THREE.MathUtils.degToRad(pose.alpha))*40, z: 0}		
-							// console.log(b);
+					//Тук намирам alpha, чрез пресечна точка на окръжност
+					//Като се разкоментират редовете има визуализация
+
+					// let c = new THREE.Mesh(new THREE.CylinderGeometry(40, 40, 1, 64, 1, false,), new THREE.MeshPhongMaterial({color: 0xFF0000, transparent: true, opacity: 0.5}));
+					// c.position.set(p.position.x, p.position.y, 0);
+					// c.rotation.x += Math.PI/2;
+					// let d = new THREE.Mesh(new THREE.CylinderGeometry(40, 40, 1, 64, 1, false,), new THREE.MeshPhongMaterial({color: 0x0000FF, transparent: true, opacity: 0.5}));
+					// d.rotation.x += Math.PI/2;
+					// scene.add(c);
+					// scene.add(d);
+					let vectors = [];
+					let vectors2 = [];
+					for (let i = 0; i < 128; i++) {
+						let v = new THREE.Vector3(40*Math.sin(Math.PI/2 - i*Math.PI/128),40*Math.cos(Math.PI/2 - i*Math.PI/128),0);
+						// let b = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.2,0.2), new  THREE.MeshPhongMaterial({color: 'black'}));
+						// b.position.set(v.x, v.y, v.z);
+						// scene.add(b);
+						vectors.push(v);
+						let v2 = new THREE.Vector3(p.position.x + 40*Math.sin(i*Math.PI/64),p.position.y + 40*Math.cos(i*Math.PI/64),0);
+						// let b2 = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.2,0.2), new  THREE.MeshPhongMaterial({color: 'black'}));
+						// b2.position.set(v2.x, v2.y, v2.z);
+						// scene.add(b2);
+						vectors2.push(v2);
+					}
+					let min = 40;
+					let minVec;
+					for (let i = 0; i < vectors.length; i++) {
+						for (let j = 0; j < vectors2.length; j++) {
+							if(vectors[i].distanceTo(vectors2[j]) < min) {
+								min = vectors[i].distanceTo(vectors2[j])
+								minVec = vectors[i];
+							}
+
 						}
 					}
+					if(minVec.x > 0) {
+						pose.alpha = THREE.MathUtils.radToDeg(Math.asin(minVec.y/40));
+					} else {
+						pose.alpha = 180 - THREE.MathUtils.radToDeg(Math.asin(minVec.y/40));
+					}
+
+					let halfPerimeter = (80+dist)/2;
+					let areaTriangle = Math.sqrt(halfPerimeter*(halfPerimeter - dist)*(halfPerimeter - 40)*(halfPerimeter - 40));
+					let angle = THREE.MathUtils.radToDeg(Math.asin(areaTriangle/800));
+					
+					if(dist > Math.sqrt(3200)) angle = 180-angle;
+					if(p.position.x > minVec.x && minVec.x < minVec.y) {
+						angle = -angle;
+					} else if(p.position.x<0 && minVec.x<0 && p.position.x < minVec.x && p.position.y > minVec.y && pose.alpha > 150) {
+						angle = -angle;
+					} else if(p.position.x>0 && minVec.x>0 && p.position.x > minVec.x && p.position.y < minVec.y && pose.alpha < 30) angle = -angle;
+					pose.beta = angle;
+					//Алгоритъмът за бета работи с точност 193/200 /96.5%/ поради грешка при изчисляванията на -бета 
 				}
 				
-				pose.alpha = 45;
-				// pose.beta = 90;
 			}
 			
 		</script>

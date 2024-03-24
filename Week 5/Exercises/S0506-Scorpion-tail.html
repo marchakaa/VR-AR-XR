@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0506: Опашка на скорпион</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {vaxSceneInit, scene, ground, object, robotElement} from "vax";
+
+			vaxSceneInit(animate);
+
+			scene.remove(object);
+
+			// първи сегмент
+			var size = 2; // размер
+			var scorpion = robotElement(1*size, 6*size, 8*size);
+			scorpion.rotation.z = -Math.PI/2;
+			scorpion.position.set(-50, 1, 50);
+			scene.add(scorpion);
+
+			function animate(t)
+			{
+				scene.rotation.y = t/10;
+			}
+			
+		</script>
+	</body>
+</html>
+
+
