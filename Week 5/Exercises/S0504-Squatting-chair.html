@@ -22,6 +22,7 @@
 		<script type="module">
 		
 			import * as THREE from "three";
+			import * as TWEEN from "three/addons/libs/tween.module.js";
 			import {vaxSceneInit, scene, ground, object, robotElement} from "vax";
 
 			vaxSceneInit(animate);
@@ -40,7 +41,7 @@
 
 			// седалка
 			var seat = robotElement(60, 5, 60);
-			seat.position.y = 60;
+			seat.position.y = 63;
 			scene.add(seat);
 
 			// първи крак
@@ -59,11 +60,40 @@
 			legA2.add(joint.clone());
 			legB1.add(joint.clone());
 			legB2.add(joint.clone());
+			
+			const DURATION = 1000;
+			let tween1A1 = new TWEEN.Tween(legA1.rotation).to({z: -Math.PI/3}, DURATION);
+			let tween2A1 = new TWEEN.Tween(legA1.rotation).to({z: 0}, DURATION);
+			tween1A1.chain(tween2A1);
+			tween2A1.chain(tween1A1);
+			let tween1B1 = new TWEEN.Tween(legB1.rotation).to({z: Math.PI/3}, DURATION);
+			let tween2B1 = new TWEEN.Tween(legB1.rotation).to({z: 0}, DURATION);
+			tween1B1.chain(tween2B1);
+			tween2B1.chain(tween1B1);
+			tween1A1.start();
+			tween1B1.start();
+
+			let tween1A2 = new TWEEN.Tween(legA2.rotation).to({z: Math.PI/1.5}, DURATION);
+			let tween2A2 = new TWEEN.Tween(legA2.rotation).to({z: 0}, DURATION);
+			tween1A2.chain(tween2A2);
+			tween2A2.chain(tween1A2);
+			let tween1B2 = new TWEEN.Tween(legB2.rotation).to({z: -Math.PI/1.5}, DURATION);
+			let tween2B2 = new TWEEN.Tween(legB2.rotation).to({z: 0}, DURATION);
+			tween1B2.chain(tween2B2);
+			tween2B2.chain(tween1B2);
+			tween1A2.start();
+			tween1B2.start();
+
+			let tweenSeat1 = new TWEEN.Tween(seat.position).to({y: 33}, DURATION).easing(TWEEN.Easing.Quadratic.In);
+			let tweenSeat2 = new TWEEN.Tween(seat.position).to({y: 63}, DURATION).easing(TWEEN.Easing.Quadratic.Out);
+			tweenSeat1.chain(tweenSeat2);
+			tweenSeat2.chain(tweenSeat1);
+			tweenSeat1.start();
 
 			function animate(t)
 			{
-				seat.position.y = 63;				
 				scene.rotation.y = t/10;
+				TWEEN.update();
 			}
 			
 		</script>

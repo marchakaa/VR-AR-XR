@@ -22,7 +22,7 @@
 		<script type="module">
 		
 			import * as THREE from "three";
-			import {vaxInit, scene, light} from "vax";
+			import {vaxInit, scene, light, camera} from "vax";
 
 			vaxInit(animate);
 
@@ -43,17 +43,21 @@
 				tree.add(wood);
 				tree.add(leaves);
 
-				let r = 2*Math.PI*i/N;
-				let random = THREE.MathUtils.randFloat(0, 2*Math.PI);
-				tree.position.set(40*Math.sin(r), 40*Math.cos(r), 0);
-				tree.rotation.set(0 , 0, Math.cos(r));
-				// tree.rotation.set(random, 0, -random)
-				// let spherical = new THREE.Spherical(39, rotation1, rotation2);
-				// tree.position.setFromSpherical(spherical);
-				planet.add(tree);
+				let phi = THREE.MathUtils.randFloat(0, Math.PI);
+				let theta = THREE.MathUtils.randFloat(0, 2*Math.PI);
+				tree.position.setFromSphericalCoords(40, phi, theta);
+				// tree.rotation.set(Math.PI/2, 0, -theta); //theta
+			
+    // Calculate direction from tree position to the center of the sphere
+				// let directionToCenter = centerOfSphere.clone().sub(tree.position).normalize();
 
+				// Set tree rotation to point towards the center of the sphere
+				// tree.lookAt(tree.position.clone().add(directionToCenter));
+
+				planet.add(tree);
 			}
 
+			
 			function animate(t)
 			{
 				// въртене на планетата

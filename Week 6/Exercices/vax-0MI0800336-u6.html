@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0609: Лабиринт</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "physijs": "./physijs/physi.module.js",
+			  "vax": "./vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+
+			import * as THREE from "three";
+			import "physijs";
+			import * as lil from "three/addons/libs/lil-gui.module.min.js";
+			import {vaxSceneInit, scene, object, light, camera, ground} from "vax";
+
+			vaxSceneInit(animate);
+			
+			scene.remove( ground );
+			scene.remove( object );
+
+			scene.setGravity( new THREE.Vector3( 0, -30, 0 ) );
+			
+			camera.position.set( 0, 50, 200 );
+			camera.lookAt( new THREE.Vector3(0,0,0) );
+			
+			light.intensity = 2;
+			
+			// земя
+			var floor = new Physijs.BoxMesh(
+				new THREE.BoxGeometry( 204, 4, 204 ),
+				new THREE.MeshPhongMaterial({color: 'lightgreen'}),
+				0
+			);
+			floor.position.set( 0, -2, 0 );
+			floor.receiveShadow = true;
+			
+			// капак
+			var material = new THREE.MeshPhongMaterial({color:'cornflowerblue',transparent:true,opacity:0.3,depthWrite:false});
+			var cover = new Physijs.BoxMesh(
+				new THREE.BoxGeometry( 200, 1, 200 ),
+				material,
+				0
+			);
+			cover.position.set( 0, 24, 0 );
+			floor.add( cover );
+			
+			// преграда ляво-дясно
+			function barX( x0, x1, z )
+			{
+				var bar = new Physijs.BoxMesh(
+					new THREE.BoxGeometry( x1-x0, 24, 2 ),
+					material,
+					0
+				);
+				bar.position.set( (x1+x0)/2, 12, z );
+				floor.add( bar );
+			}
+			
+			// преграда напред-назад
+			function barZ( x, z0, z1 )
+			{
+				var bar = new Physijs.BoxMesh(
+					new THREE.BoxGeometry( 2, 24, z1-z0 ),
+					material,
+					0
+				);
+				bar.position.set( x, 12, (z1+z0)/2 );
+				floor.add( bar );
+			}
+			
+			// външни стени
+			barX( -100, 100, -100 );
+			barX( -100, 80, 100 );
+			barZ( -100, -100, 100 );
+			barZ( 100, -100, 100 );
+
+			//Нови стени
+			barX(-30, -100, -80);
+			barX(-20, -70, -30);
+			barZ( -10, -100, -10 );
+			barZ( -10, 80, 10 );
+			barX(-10, -70, 10);
+			barX(-100, -50, 80);
+			barX(-30, -10, 80);
+			barZ( -80, 80, 30 );
+			barZ( 10, 100, 50 );
+			barZ( 10, 30, -10 );
+			barZ( 30, 100, -60 );
+			barZ( 30, -100, -80 );
+			barX(-10, 10, -60);
+			barX(30, 60, -60);
+			barX(100, 60, -40);
+			barX(30, 60, -20);
+			barX(100, 60, 0);
+			barZ( 60, 100, 20 );
+			barX(100, 80, 80);
+			barX(100, 90, 50);
+			barX(60, 70, 50);
+			
+			scene.add( floor );
+
+			// топка
+			var geometry = new THREE.OctahedronGeometry( 9, 2 );
+			material = new THREE.MeshPhongMaterial({color:'orange', shininess:150, flatShading: true});
+			var ball = new Physijs.SphereMesh( geometry, material, 1 );
+				ball.position.set( -90, 9, -90 );
+				ball.castShadow = true;
+			scene.add( ball );
+
+			let reverseControls = false;
+			//GUI
+			let gui = new lil.GUI();
+			let data = {
+				easyFunction: function easy() {
+					floor.material.color = new THREE.Color('lightgreen');
+					cover.material.opacity = 0.3;
+					reverseControls = false;
+				},
+				hardFunction: function hard() {
+					floor.material.color = new THREE.Color('midnightblue');
+					cover.material.opacity = 0.1;
+					reverseControls = false;
+				},
+				impossibleFunction: function impossible() {
+					floor.material.color = new THREE.Color('orange');
+					cover.material.opacity = 0;
+					reverseControls = false;
+				},
+				extremeFunction: function extreme() {
+					floor.material.color = new THREE.Color('midnightblue');
+					cover.material.opacity = 0.1;
+					reverseControls = true;
+				},
+				color: new THREE.Color(0xFFFFFF)
+			};
+			let group = gui.addFolder('Трудност');
+			group.add(data, 'easyFunction').name('Нормално');
+			group.add(data, 'hardFunction').name('Трудно');
+			group.add(data, 'impossibleFunction').name('Ужасно');
+			group.add(data, 'extremeFunction').name('Екстремно');
+			gui.addColor(data, 'color').name('Цвят на топчето').onChange(
+				function (value)
+				{
+					ball.material.color = value;
+				}
+			);
+
+
+
+			//Мястото на мишката
+			let pointerX = 0;
+			let pointerY = 0;
+			window.addEventListener('pointermove', (event) => {
+				pointerX = event.clientX;
+				pointerY = event.clientY;
+			});
+			//Цънтъра на екрана
+			const centerX = window.innerWidth / 2;
+			const centerY = window.innerHeight / 2;
+
+			function followCursor(x, y) {
+				if (!reverseControls) {
+					scene.rotation.set((y/centerY - 1) * Math.PI/8, 0, -(x/centerX - 1) * Math.PI/8)
+					ball.applyForce(new THREE.Vector3((x/centerX - 1), 0, (y/centerY - 1)), new THREE.Vector3(0, 0, 0))
+				} else {
+					scene.rotation.set(-(x/centerX - 1) * Math.PI/8, 0, (y/centerY - 1) * Math.PI/8)
+					ball.applyForce(new THREE.Vector3((x/centerX - 1), 0, (y/centerY - 1)), new THREE.Vector3(0, 0, 0))
+				}
+			}
+			function animate(t)
+			{
+				scene.simulate( 1/5 );
+				if(ball.position.y < 8) {
+					scene.remove(ball); //Понеже топката има огромна засилка надолу направо я рестартирам
+					ball.position.set( -90, 9, -90 );
+					scene.add(ball);
+
+				}
+				followCursor(pointerX, 	pointerY);
+			}
+			
+		</script>
+	</body>
+</html>
+
+

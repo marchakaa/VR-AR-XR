@@ -39,9 +39,23 @@
 			scorpion.position.set( -50, 1, 50 );
 			scene.add( scorpion );
 
+			const N = 30;
+			let scorpionSegments = [];
+			scorpionSegments.push(scorpion);
+			for (let i = 1; i < N; i++) {
+				let geometryClone = geometry.clone();
+				geometryClone.scale(1-0.03*i,1-0.03*i,1-0.03*i);
+				let scorpionSegment = robotElementShape(geometryClone, (6-0.175*i)*size, scorpionSegments[scorpionSegments.length - 1]);
+				scorpionSegment.rotation.z = Math.PI/8;
+				scorpionSegments.push(scorpionSegment);
+			}
+
 			function animate( t )
 			{
-				scene.rotation.y = t/10;
+				scene.rotation.y = t/3;
+				for (let i = 1; i < scorpionSegments.length; i++) {
+					scorpionSegments[i].rotation.z = Math.abs(Math.cos(t))*Math.PI/8;
+				}
 			}
 			
 		</script>

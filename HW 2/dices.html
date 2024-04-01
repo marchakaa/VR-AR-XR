@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Зарчета</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script src="three.min.js"></script>
+		<script src="physi.js"></script>
+		<script src="vax.js"></script>
+	</head>
+	
+	<body>
+		<script>
+			vaxInit();
+
+			// светлина и сенки
+			renderer.shadowMap.enabled = true;
+			light.shadow.mapSize = new THREE.Vector2( 1024*2, 1024*2 );
+			light.position.set( 0, 300, 150 );
+			light.castShadow = true;
+
+			// по-добра позиция на камерата
+			camera.position.set( 100, 50, 100 );
+			camera.lookAt( new THREE.Vector3(0,20,0) );
+			
+			// земя
+			var geometry = new THREE.BoxGeometry( 300, 4, 300 ),
+				material = Physijs.createMaterial( new THREE.MeshPhongMaterial({color:'lightgreen'}) );
+			var ground = new Physijs.BoxMesh( geometry, material, 0 );
+				ground.position.set( 0, -2, 0 );
+				ground.receiveShadow = true;
+			scene.add( ground );
+
+            let geometryDice = new THREE.BoxGeometry(10, 10, 10),
+                materialDice = Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'red', transparent: true, opacity: 0.7}));
+            let dice = new Physijs.BoxMesh(geometryDice, materialDice);
+                dice.position.set(40, 20, 40);
+                dice.castShadow = true;
+            let dotGeometry = new THREE.CylinderGeometry(1,1, 0.5),
+                dotMaterial = Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'white'}));
+            let dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+                dice.add(dot);
+                dot.rotation.z = Math.PI/2;
+                dot.position.x = 5;
+            scene.add(dice);
+			function animate()
+			{		
+				scene.simulate( 1/20 );
+			}
+		</script>
+	</body>
+</html>
+
+

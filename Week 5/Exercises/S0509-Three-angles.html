@@ -43,9 +43,26 @@
 
 			// пилон
 			scene.add(new Pillar(p));
+			let wire = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 50), ground.material);
+			wire.position.x = 25;
+			wire.position.y = 30;
+			wire.rotation.z = Math.PI/2;
+			scene.add(wire);
+			object.scale.set(0.25,1.5,6);
+			object.position.y = -25;
+			object.rotation.z = Math.PI/2;
+			scene.remove(object);
+			wire.add(object);
 			
 			function animate(t)
 			{
+				object.rotation.y = THREE.MathUtils.degToRad(angles.alpha);
+				wire.position.setFromSphericalCoords(25, Math.PI/2 - THREE.MathUtils.degToRad(angles.beta),Math.PI/2 - THREE.MathUtils.degToRad(angles.gamma));
+				wire.position.add(new THREE.Vector3(0, 30, 0));
+				wire.rotation.y = -THREE.MathUtils.degToRad(angles.gamma);
+				wire.rotation.z = THREE.MathUtils.degToRad(angles.beta) + Math.PI/2;
+
+				
 
 			}
 			

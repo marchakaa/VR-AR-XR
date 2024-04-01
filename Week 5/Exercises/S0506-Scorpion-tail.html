@@ -22,6 +22,7 @@
 		<script type="module">
 		
 			import * as THREE from "three";
+			import * as TWEEN from "three/addons/libs/tween.module.js";
 			import {vaxSceneInit, scene, ground, object, robotElement} from "vax";
 
 			vaxSceneInit(animate);
@@ -35,9 +36,23 @@
 			scorpion.position.set(-50, 1, 50);
 			scene.add(scorpion);
 
+			const N = 30;
+			let scorpionSegments = []
+			scorpionSegments.push(scorpion);
+			for (let i = 1; i <= N; i++) {
+				let scorpionSegment = robotElement((1-0.02*i)*size, (6 - 0.2*i)*size, (8 - 0.2*i)*size, scorpionSegments[scorpionSegments.length - 1]);
+				scorpionSegment.rotation.z = Math.PI/4;
+				scorpionSegments.push(scorpionSegment);
+			}
+
 			function animate(t)
 			{
+				TWEEN.update();
 				scene.rotation.y = t/10;
+				for (let i = 1; i < scorpionSegments.length; i++) {
+					scorpionSegments[i].rotation.z = Math.abs(Math.cos(t))*Math.PI/4;
+					
+				}
 			}
 			
 		</script>

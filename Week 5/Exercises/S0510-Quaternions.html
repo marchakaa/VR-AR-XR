@@ -26,7 +26,7 @@
 			import {vaxSceneInit, scene, ground, object, robotElement, Pillar} from "vax";
 
 			vaxSceneInit(animate);
-			
+			// const quaternionY = new THREE.Quaternion();
 			// интерактивно контролиране на ъглите
 			var gui = new lil.GUI();
 			var angles = {
@@ -35,19 +35,58 @@
 				gamma: 0,
 				autoAlpha: false
 			};
-			gui.add(angles, 'gamma', -360, 360).name('Хоризонтално').step(1);
-			gui.add(angles, 'beta', -90, 90).name('Вертикално').step(1);
+			gui.add(angles, 'gamma', -360, 360).name('Хоризонтално').step(1).onChange(function(value) {
+				// if(value >-360 && value < 360) {
+
+					const angleRad = THREE.MathUtils.degToRad(angles.gamma);
+					const quaternionY = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0).normalize(), THREE.MathUtils.degToRad(angleRad));
+					wire.applyQuaternion(quaternionY);
+					wire.position.applyQuaternion(quaternionY);
+					console.log(value);
+				// }
+				
+
+			});
+			gui.add(angles, 'beta', -90, 90).name('Вертикално').step(1).onChange(function(value) {
+				// if(value >-360 && value < 360) {
+
+					const angleRad = THREE.MathUtils.degToRad(angles.beta);
+					const quaternionZ = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1).normalize(), THREE.MathUtils.degToRad(angleRad));
+					wire.applyQuaternion(quaternionZ);
+					wire.position.applyQuaternion(quaternionZe);
+					console.log(value);
+				// }
+				
+
+			});
 			gui.add(angles, 'alpha', -360, 360).name('Около оста').step(1);
 			gui.add(angles, 'autoAlpha').name('Автоматично');
 
 			// позиция
 			var p = new THREE.Vector3(0, 30, 0);
+			let wire = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 50), ground.material);
+			wire.position.x = 25;
+			wire.position.y = 30;
+			wire.rotation.z = Math.PI/2;
+			scene.add(wire);
+			object.scale.set(0.25, 1.5, 6);
+			object.position.y = -25;
+			object.rotation.z = Math.PI/2;
+			scene.remove(object);
+			wire.add(object);
 
 			// пилон
 			scene.add( new Pillar(p));
 
+			// const quaternionY = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0).normalize(), THREE.MathUtils.degToRad(angles.gamma));
+				// wire.applyQuaternion(quaternionY);
+				// wire.position.applyQuaternion(quaternionY);
+
+			const quaternionX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0).normalize(), THREE.MathUtils.degToRad(2));
 			function animate(t)
 			{
+				if(angles.autoAlpha) wire.applyQuaternion(quaternionX);
+
 				scene.rotation.y = t/10;
 			}
 			

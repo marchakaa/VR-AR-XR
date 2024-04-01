@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0601: Кула от кубчета</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "physijs": "./physijs/physi.module.js",
+			  "vax": "./vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+
+			import * as THREE from "three";
+			import "physijs";
+			import {vaxInit, renderer, light, scene, camera} from "vax";
+
+			vaxInit(animate);
+
+			// светлина и сенки
+			renderer.shadowMap.enabled = true;
+			light.shadow.mapSize = new THREE.Vector2(1024 * 2, 1024 * 2);
+			light.position.set(-150, 300, -50);
+			light.intensity = 0.8;
+
+			var light2 = light.clone();
+			light2.intensity = 1;
+			light2.castShadow = true;
+			scene.add(light2);
+
+			scene.add(new THREE.AmbientLight('yellow', 1));
+
+			camera.position.set(0, 50, 240);
+			camera.lookAt(new THREE.Vector3(0, 80, 0));
+
+			// земя
+			var geometry = new THREE.BoxGeometry(300, 4, 300),
+			material = Physijs.createMaterial(new THREE.MeshPhongMaterial({color: 'lightgreen'}), 1, 0);
+			var ground = new Physijs.BoxMesh(geometry, material, 0);
+			ground.position.set(0, -10, 0);
+			ground.receiveShadow = true;
+			scene.add(ground);
+
+			// кубчета
+			var geometry = new THREE.BoxGeometry(20, 20, 20),
+			material = Physijs.createMaterial(new THREE.MeshPhongMaterial({color: 'hotpink'}), 1, 0);
+			
+			var cube = new Physijs.BoxMesh(geometry, material);
+			cube.position.set(0, 100, 0);
+			cube.receiveShadow = true;
+			cube.castShadow = true;
+			cube.addEventListener('collision', hitGround);
+			cube.addEventListener('collision', hit);
+			scene.add(cube);
+
+			let groundHits = 0;
+			function hitGround(otherObject) {
+				if(otherObject instanceof Physijs.BoxMesh && otherObject == ground) {
+					cube.removeEventListener('collision', hitGround);
+					groundHits++;
+					if(groundHits >= 2) {
+						cube.removeEventListener('collision', hit);
+					}
+				}
+			}
+
+			function hit(otherObject) {
+				if(otherObject instanceof Physijs.BoxMesh) {
+					cube.removeEventListener('collision', hit);
+					cube = new Physijs.BoxMesh(geometry, material);
+					cube.position.set(THREE.MathUtils.randFloat(-1,1)*9, 200, 0);
+					cube.receiveShadow = true;
+					cube.castShadow = true;
+					cube.addEventListener('collision', hit);
+					cube.addEventListener('collision', hitGround);
+					scene.add(cube);
+				}
+			}
+
+			function animate(t)
+			{
+				scene.simulate(1/10);
+
+				scene.rotation.y = t/10;
+			}
+			
+		</script>
+	</body>
+</html>
+
+
