@@ -13,6 +13,36 @@
 	</head>
 	
 	<body>
+		<div>
+			<h1></h1>
+			<h2></h2>
+			<h3></h3>
+		</div>
+		<style>
+			div {
+				position: absolute;
+				top: 0;
+				left: 50%;
+				transform: translateX(-50%);
+
+			}
+			h1 {
+				text-align: center;
+				margin: 0;
+				margin-top: 1%;
+				padding: 0;
+			}
+			h2 {
+				text-align: center;
+				margin: 0;
+				padding: 0;
+			}
+			h3 {
+				text-align: center;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
 		<script>
 			vaxInit();
 
@@ -27,28 +57,232 @@
 			camera.lookAt( new THREE.Vector3(0,20,0) );
 			
 			// земя
-			var geometry = new THREE.BoxGeometry( 300, 4, 300 ),
-				material = Physijs.createMaterial( new THREE.MeshPhongMaterial({color:'lightgreen'}) );
-			var ground = new Physijs.BoxMesh( geometry, material, 0 );
-				ground.position.set( 0, -2, 0 );
-				ground.receiveShadow = true;
-			scene.add( ground );
+			// var geometry = new THREE.BoxGeometry( 300, 4, 300 ),
+			// 	material = Physijs.createMaterial( new THREE.MeshPhongMaterial({color:'lightgreen'}) );
+			// var ground = new Physijs.BoxMesh( geometry, material, 0 );
+			// 	ground.position.set( 0, 0, 0 );
+			// 	ground.receiveShadow = true;
+			// scene.add( ground );
 
-            let geometryDice = new THREE.BoxGeometry(10, 10, 10),
-                materialDice = Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'red', transparent: true, opacity: 0.7}));
-            let dice = new Physijs.BoxMesh(geometryDice, materialDice);
-                dice.position.set(40, 20, 40);
-                dice.castShadow = true;
-            let dotGeometry = new THREE.CylinderGeometry(1,1, 0.5),
-                dotMaterial = Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'white'}));
-            let dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
-                dice.add(dot);
-                dot.rotation.z = Math.PI/2;
-                dot.position.x = 5;
+			function createDice() {
+
+				let geometryDice = new THREE.BoxGeometry(12, 12, 12),
+					materialDice = Physijs.createMaterial( new THREE.MeshPhongMaterial({
+						color: 'red', 
+						transparent: true, 
+						opacity: 0.85, 
+						shininess: 40,
+					    specular: 0x101010}));
+				let dice = new Physijs.BoxMesh(geometryDice, materialDice);
+					dice.castShadow = true;
+				
+					let dotGeometry = new THREE.CylinderGeometry(1, 1, 0),
+					dotMaterial = Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'white'}));
+
+				let l = 3;
+				let d = 6.01;
+				//side 1
+				let dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+					dot.rotation.z = Math.PI/2;
+					dot.position.set(d, 0, 0);
+					dice.add(dot);
+				//side 2
+				for (let i = 0; i < 2; i++) {
+				dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+					dot.position.set(l - 2*i*l, d, l - 2*i*l);
+					dice.add(dot);
+				}
+				//side 6
+				for (let i = 0; i < 2; i++) {
+					for (let j = 0; j < 3; j++) {
+						dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+							dot.rotation.z = Math.PI/2;
+							dot.position.set(-d, 3 - j*l, l - 2*i*l);
+							dice.add(dot);
+					}
+				}
+				//side 4
+				for (let i = 0; i < 2; i++) {
+					for (let j = 0; j < 2; j++) {
+						dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+							dot.rotation.x = Math.PI/2;
+							dot.position.set(l - 2*i*l, 3 - 2*j*l, -d);
+							dice.add(dot);
+					}
+				}
+				//side 5
+				for (let i = 0; i < 2; i++) {
+					for (let j = 0; j < 2; j++) {
+						dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+							dot.position.set(l - 2*i*l, -d, 3 - 2*j*l);
+							dice.add(dot);
+					}
+				}
+				dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+					dot.position.set(0, -d, 0);
+					dice.add(dot);
+				//side 3
+				for (let i = 0; i < 2; i++) {
+				dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+					dot.rotation.x = Math.PI/2;
+					dot.position.set(l - 2*i*l, l - 2*i*l, d);
+					dice.add(dot);
+				}
+				dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+					dot.rotation.x = Math.PI/2;
+					dot.position.set(0, 0, d);
+					dice.add(dot);
+				return dice;
+			}
+			function createBoard() {
+				//board
+				let boardGeometry = new THREE.BoxGeometry( 120, 4, 150 ),
+					boardMaterial = Physijs.createMaterial( new THREE.MeshPhongMaterial({color:0x202020}) );
+				// let board = new Physijs.BoxMesh( boardGeometry, boardMaterial);
+				let board = new Physijs.BoxMesh( boardGeometry, boardMaterial, 0 );
+					board.position.set( 0, 0, 0 );
+					board.receiveShadow = true;
+				//Cover
+				let underGeometry = new THREE.BoxGeometry(120, 2, 150),
+					wallMaterial = Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'brown'}));
+				let underBoard = new  Physijs.BoxMesh( underGeometry, wallMaterial, 0);
+				underBoard.position.y = -3;
+				board.add(underBoard);
+				//Walls
+				for(let i = 0; i < 2; i++) {
+					let wallLRGeometry = new THREE.BoxGeometry(3, 24, 150);
+					let wall = new Physijs.BoxMesh( wallLRGeometry, wallMaterial, 0);
+					wall.position.set(61.5 - 123*i, 8, 0);
+					board.add(wall);
+				}
+				for(let i = 0; i < 2; i++) {
+					let wallLRGeometry = new THREE.BoxGeometry(126, 24, 3);
+					let wall = new Physijs.BoxMesh( wallLRGeometry, wallMaterial, 0);
+					wall.position.set(0, 8, 76.5 - 153*i);
+					board.add(wall);
+				}
+				//triangles
+				let vertices = [
+					60, 0, 0,
+					40, 0, 0,
+					50, 0, 60
+				];
+
+				let indices = [
+					0, 1, 2
+				];
+
+				let triangleGeometry = new THREE.BufferGeometry();
+				triangleGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+				triangleGeometry.setIndex(indices);
+
+				let triangleMaterials = [];
+				let triangleMaterial1 = new THREE.MeshBasicMaterial({ color: 0xFF0000, side: THREE.DoubleSide });
+				let triangleMaterial2 = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide });
+				triangleMaterials.push(triangleMaterial1);
+				triangleMaterials.push(triangleMaterial2);
+
+				let triangle = new THREE.Mesh(triangleGeometry, triangleMaterial1);
+				for(let i = 0; i < 6; i++) {
+					triangle = new THREE.Mesh(triangleGeometry, triangleMaterials[(i+1)%2]);
+					board.add(triangle);
+					triangle.position.set(0 - 20*i,2.006,-75);
+				}
+
+				for(let i = 0; i < 6; i++) {
+					triangle = new THREE.Mesh(triangleGeometry, triangleMaterials[i%2]);
+					board.add(triangle);
+					triangle.rotation.y = Math.PI;
+					triangle.position.set(100 - 20*i,2.006,75);
+				}
+				return board;
+
+			}
+			function getDiceValue(dice) {
+				if(dice.rotation.x < -1.5 && dice.rotation.x > -1.6) return 3;
+				if(dice.rotation.x > 1.5 && dice.rotation.x < 1.6) return 4;
+				if((dice.rotation.x > -0.1 && dice.rotation.x < 0.1) || (Math.abs(dice.rotation.x) > 3 && Math.abs(dice.rotation.x) < 3.2)) {
+					let sum = Math.abs(dice.rotation.x) + dice.rotation.z;
+					if((sum < 0.1 && sum > -0.1) || (sum < 6.4 && sum > 6)) return 2;
+					if((sum > 3 && sum < 3.2) || (sum < -3 && sum > -3.2)) return 5;
+					if((sum > 4.5 && sum < 5) || (sum < -1.5 && sum > -1.6)) return 6;
+					if(sum > 1.5 && sum < 1.6) return 1;
+				}
+				return 0;
+			}
+			function updateScore(dice1, dice2) {
+				let h1 = document.querySelector("h1");
+				let h2 = document.querySelector("h2");
+				let h3 = document.querySelector("h3");
+				h1.textContent = "Резултат:";
+				if(dice1 && dice2) {
+					h2.textContent = `${dice1} + ${dice2} = ${dice1 + dice2}`;
+					if(dice1 == dice2) {
+						switch (dice1) {
+							case 1: h3.textContent = "/еци/";
+								break;
+							case 2: h3.textContent = "/дьорджухар/";
+								break;
+							case 3: h3.textContent = "/дюсе/";
+								break;
+							case 4: h3.textContent = "/дюбара/";
+								break;
+							case 5: h3.textContent = "/дюбеш/";
+								break;
+							case 6: h3.textContent = "/дюшеш/";
+								break;
+							default: break;
+						}
+					}
+				} else {
+						h2.textContent = "Калъч";
+				}
+			}
+			
+			let board = createBoard();
+			let board2 = createBoard();
+			board.position.x = 63.5;
+			board2.position.x = -63.5;
+			let hingeGeometry = new THREE.CylinderGeometry(1,1, 154),
+				hingeMaterial = new Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'silver'}));
+			let hinge = new Physijs.CylinderMesh(hingeGeometry, hingeMaterial, 0);
+			hinge.rotation.x = Math.PI/2;
+			hinge.position.y = 20;
+
+
+			let dice = createDice();
+			let dice2 = createDice();
+			dice.position.set(103.5,50,90);
+			dice2.position.set(103.5,50,60);
+
+			//GUI
+			// let gui = new lil.GUI();
+			// let groupDice = gui.addFolder("Зарче");
+
             scene.add(dice);
-			function animate()
+            scene.add(dice2);
+			dice.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
+			dice2.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
+			camera.position.set(150, 100, 150);
+			scene.add(board);
+			scene.add(board2);
+			scene.add(hinge);
+			function animate(t)
 			{		
-				scene.simulate( 1/20 );
+				if (t > 1) {
+					let d1, d2;
+					if(dice.getLinearVelocity().x == 0 && dice.getLinearVelocity().y == 0 && dice.getLinearVelocity().z == 0) {
+						d1 = getDiceValue(dice);
+					}
+					if(dice2.getLinearVelocity().x == 0 && dice2.getLinearVelocity().y == 0 && dice2.getLinearVelocity().z == 0) {
+						d2 = getDiceValue(dice2);
+					}
+					if(d1 && d2) {
+						updateScore(d1, d2);
+					}
+				}
+				scene.rotation.y = -t;
+				scene.simulate( 1/10 );
 			}
 		</script>
 	</body>
