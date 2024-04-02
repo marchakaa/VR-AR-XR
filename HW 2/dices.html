@@ -21,7 +21,7 @@
 		<div class="nav">
 			<p>Меню</p>
 			<div id="roll">Хвърли зарчетата</div>
-			<div id="roll">Хвърли зарчетата</div>
+			<!-- <div id="roll">Хвърли зарчетата</div> -->
 		</div>
 		<style>
 			.notgui {
@@ -212,14 +212,14 @@
 				for(let i = 0; i < 6; i++) {
 					triangle = new THREE.Mesh(triangleGeometry, triangleMaterials[(i+1)%2]);
 					board.add(triangle);
-					triangle.position.set(0 - 20*i,2.006,-75);
+					triangle.position.set(0 - 20*i,2.01,-75);
 				}
 
 				for(let i = 0; i < 6; i++) {
 					triangle = new THREE.Mesh(triangleGeometry, triangleMaterials[i%2]);
 					board.add(triangle);
 					triangle.rotation.y = Math.PI;
-					triangle.position.set(100 - 20*i,2.006,75);
+					triangle.position.set(100 - 20*i,2.01,75);
 				}
 				return board;
 
@@ -241,7 +241,8 @@
 				let h2 = document.querySelector("h2");
 				let h3 = document.querySelector("h3");
 				h1.textContent = "Резултат:";
-				if(dice1 && dice2) {
+				h3.textContent = "";
+				if(dice1 != 0 && dice2 != 0) {
 					h2.textContent = `${dice1} + ${dice2} = ${dice1 + dice2}`;
 					if(dice1 == dice2) {
 						switch (dice1) {
@@ -276,22 +277,19 @@
 			hinge.position.y = 20;
 
 
-			// let dice = createDice();
-			// let dice2 = createDice();
-			// dice.position.set(103.5,50,90);
-			// dice2.position.set(103.5,50,60);
-
-		// Select the div element
 		var buttonRoll = document.getElementById("roll");
 
 		let dice;
 		let dice2;
-		// Add an onclick event listener
+		let d1 = 7;
+		let d2 = 7;
 		buttonRoll.addEventListener("click", function() {
 			if(dice && dice2) {
 				scene.remove(dice);
 				scene.remove(dice2);
 			}
+			d1 = 7;
+			d2 = 7;
 			dice = createDice();
 			dice2 = createDice();
 			dice.position.set(103.5,50,90);
@@ -302,27 +300,20 @@
 			dice2.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
 		});
 
-            // scene.add(dice);
-            // scene.add(dice2);
-			// dice.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
-			// dice2.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
 			camera.position.set(150, 100, 150);
 			scene.add(board);
 			scene.add(board2);
 			scene.add(hinge);
 			function animate(t)
 			{		
-					let d1, d2;
 					if (dice && dice2 && dice.position.y < 50) {
 						if(dice.getLinearVelocity().x == 0 && dice.getLinearVelocity().y == 0 && dice.getLinearVelocity().z == 0) {
-							console.log(1);
 							d1 = getDiceValue(dice);
 						}
 						if(dice2.getLinearVelocity().x == 0 && dice2.getLinearVelocity().y == 0 && dice2.getLinearVelocity().z == 0) {
-							console.log(2);
 							d2 = getDiceValue(dice2);
 						}
-						if(d1 && d2) {
+						if(d1 < 7 && d2 < 7) {
 							updateScore(d1, d2);
 						}
 
