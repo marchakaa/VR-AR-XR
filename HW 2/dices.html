@@ -13,17 +13,51 @@
 	</head>
 	
 	<body>
-		<div>
+		<div class="notgui">
 			<h1></h1>
 			<h2></h2>
 			<h3></h3>
 		</div>
+		<div class="nav">
+			<p>Меню</p>
+			<div id="roll">Хвърли зарчетата</div>
+			<div id="roll">Хвърли зарчетата</div>
+		</div>
 		<style>
-			div {
+			.notgui {
 				position: absolute;
 				top: 0;
 				left: 50%;
 				transform: translateX(-50%);
+				
+			}
+			.nav {
+				position: absolute;
+				top: 1%;
+				right: 1%;
+				width: fit-content;
+				height: fit-content;
+				text-align: center;
+				border-radius: 5px;
+				background-color: rgba(138, 138, 138, 0.5);
+				user-select: none;
+			}
+			.nav p {
+				margin: 0;
+				margin-top: 5px;
+			}
+			#roll {
+				background-color: crimson;
+				margin: 5px;
+				width: 150px;
+				height: 20px;
+				color: white;
+				text-align: center;
+				cursor: pointer;
+				border-radius: 5px;
+			}
+			#roll:hover {
+				background-color: red;
 
 			}
 			h1 {
@@ -55,14 +89,6 @@
 			// по-добра позиция на камерата
 			camera.position.set( 100, 50, 100 );
 			camera.lookAt( new THREE.Vector3(0,20,0) );
-			
-			// земя
-			// var geometry = new THREE.BoxGeometry( 300, 4, 300 ),
-			// 	material = Physijs.createMaterial( new THREE.MeshPhongMaterial({color:'lightgreen'}) );
-			// var ground = new Physijs.BoxMesh( geometry, material, 0 );
-			// 	ground.position.set( 0, 0, 0 );
-			// 	ground.receiveShadow = true;
-			// scene.add( ground );
 
 			function createDice() {
 
@@ -250,37 +276,57 @@
 			hinge.position.y = 20;
 
 
-			let dice = createDice();
-			let dice2 = createDice();
+			// let dice = createDice();
+			// let dice2 = createDice();
+			// dice.position.set(103.5,50,90);
+			// dice2.position.set(103.5,50,60);
+
+		// Select the div element
+		var buttonRoll = document.getElementById("roll");
+
+		let dice;
+		let dice2;
+		// Add an onclick event listener
+		buttonRoll.addEventListener("click", function() {
+			if(dice && dice2) {
+				scene.remove(dice);
+				scene.remove(dice2);
+			}
+			dice = createDice();
+			dice2 = createDice();
 			dice.position.set(103.5,50,90);
 			dice2.position.set(103.5,50,60);
-
-			//GUI
-			// let gui = new lil.GUI();
-			// let groupDice = gui.addFolder("Зарче");
-
             scene.add(dice);
             scene.add(dice2);
 			dice.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
 			dice2.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
+		});
+
+            // scene.add(dice);
+            // scene.add(dice2);
+			// dice.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
+			// dice2.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
 			camera.position.set(150, 100, 150);
 			scene.add(board);
 			scene.add(board2);
 			scene.add(hinge);
 			function animate(t)
 			{		
-				if (t > 1) {
 					let d1, d2;
-					if(dice.getLinearVelocity().x == 0 && dice.getLinearVelocity().y == 0 && dice.getLinearVelocity().z == 0) {
-						d1 = getDiceValue(dice);
+					if (dice && dice2 && dice.position.y < 50) {
+						if(dice.getLinearVelocity().x == 0 && dice.getLinearVelocity().y == 0 && dice.getLinearVelocity().z == 0) {
+							console.log(1);
+							d1 = getDiceValue(dice);
+						}
+						if(dice2.getLinearVelocity().x == 0 && dice2.getLinearVelocity().y == 0 && dice2.getLinearVelocity().z == 0) {
+							console.log(2);
+							d2 = getDiceValue(dice2);
+						}
+						if(d1 && d2) {
+							updateScore(d1, d2);
+						}
+
 					}
-					if(dice2.getLinearVelocity().x == 0 && dice2.getLinearVelocity().y == 0 && dice2.getLinearVelocity().z == 0) {
-						d2 = getDiceValue(dice2);
-					}
-					if(d1 && d2) {
-						updateScore(d1, d2);
-					}
-				}
 				scene.rotation.y = -t;
 				scene.simulate( 1/10 );
 			}
