@@ -20,7 +20,19 @@
 		</div>
 		<div class="nav">
 			<p>Меню</p>
+			<div class="line"></div>
 			<div id="roll">Хвърли зарчетата</div>
+			<div class="line"></div>
+			<p class="subtext">Зарчета</p>
+			<ul class="colors">
+				<li id="white"></li>
+				<li id="red" class="active"></li>
+				<li id="green"></li>
+				<li id="blue"></li>
+				<li id="orange"></li>
+				<li id="purple"></li>
+				<li id="rainbow"></li>
+			</ul>
 			<!-- <div id="roll">Хвърли зарчетата</div> -->
 		</div>
 		<style>
@@ -48,7 +60,7 @@
 			}
 			#roll {
 				background-color: crimson;
-				margin: 5px;
+				margin: 5px auto;
 				width: 150px;
 				height: 20px;
 				color: white;
@@ -58,7 +70,15 @@
 			}
 			#roll:hover {
 				background-color: red;
-
+			}
+			.line {
+				width: 100%;
+				height: 2px;
+				background-color: darkgray;
+			}
+			.subtext {
+				margin: 0;
+				font-size: 15px;
 			}
 			h1 {
 				text-align: center;
@@ -76,6 +96,30 @@
 				margin: 0;
 				padding: 0;
 			}
+			ul {
+				list-style-type: none;
+				padding: 0;
+				margin: 5px;
+			}
+			li {
+				padding-top: 0;
+				width: 20px;
+				height: 20px;
+				background-color: orange;
+				border-radius: 3px;
+				display: inline-block;
+				cursor: pointer;
+				opacity: 30%;
+			}
+			li.active { opacity: 100%; }
+			li:hover { opacity: 75%; }
+			#white { background-color: white; }
+			#red { background-color: red; }
+			#green { background-color: green; }
+			#blue { background-color: blue; }
+			#orange {background-color: orange; }
+			#purple {background-color: purple; }
+			#rainbow {background: linear-gradient(-45deg, violet, indigo, blue, green, yellow, orange, red); };
 		</style>
 		<script>
 			vaxInit();
@@ -90,20 +134,20 @@
 			camera.position.set( 100, 50, 100 );
 			camera.lookAt( new THREE.Vector3(0,20,0) );
 
+			
+			let geometryDice = new THREE.BoxGeometry(12, 12, 12),
+				materialDice = Physijs.createMaterial( new THREE.MeshPhongMaterial({
+					color: 'red', 
+					transparent: true, 
+					opacity: 0.85, 
+					shininess: 40,
+				    specular: 0x101010}));
+			let dotGeometry = new THREE.CylinderGeometry(1, 1, 0),
+				dotMaterial = Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'white'}));
+			//Functions
 			function createDice() {
-
-				let geometryDice = new THREE.BoxGeometry(12, 12, 12),
-					materialDice = Physijs.createMaterial( new THREE.MeshPhongMaterial({
-						color: 'red', 
-						transparent: true, 
-						opacity: 0.85, 
-						shininess: 40,
-					    specular: 0x101010}));
 				let dice = new Physijs.BoxMesh(geometryDice, materialDice);
 					dice.castShadow = true;
-				
-					let dotGeometry = new THREE.CylinderGeometry(1, 1, 0),
-					dotMaterial = Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'white'}));
 
 				let l = 3;
 				let d = 6.01;
@@ -265,7 +309,42 @@
 						h2.textContent = "Калъч";
 				}
 			}
-			
+			function setDiceColor(color) {
+				if(color != "rainbow") {
+					materialDice.color = new THREE.Color(color);
+					if(color == "white" || color == "orange") {
+						dotMaterial.color = new THREE.Color("black");
+					} else {
+						dotMaterial.color = new THREE.Color("white");
+					}
+				} else {
+					materialDice.color = new THREE.Color().setHSL(THREE.MathUtils.randFloat(0, 1), 1, 0.5);
+					dotMaterial.color = new THREE.Color("white");
+				}
+			}	
+			function throwDices() {
+				if(dice && dice2) {
+					scene.remove(dice);
+					scene.remove(dice2);
+				}
+				d1 = 7;
+				d2 = 7;
+				dice = createDice();
+				dice2 = createDice();
+				dice.position.set(103.5,50,90);
+				dice2.position.set(103.5,50,60);
+				scene.add(dice);
+				scene.add(dice2);
+				dice.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
+				dice2.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
+			}
+			//Events
+			let dKeyPressed = false;
+			document.addEventListener("keydown", function(event) {
+				if(event.key == "D" || event.key == "d" || event.keyCode == 68) {
+					throwDices();
+				}
+			})
 			let board = createBoard();
 			let board2 = createBoard();
 			board.position.x = 63.5;
@@ -277,29 +356,27 @@
 			hinge.position.y = 20;
 
 
-		var buttonRoll = document.getElementById("roll");
-
+			
 		let dice;
 		let dice2;
 		let d1 = 7;
 		let d2 = 7;
-		buttonRoll.addEventListener("click", function() {
-			if(dice && dice2) {
-				scene.remove(dice);
-				scene.remove(dice2);
-			}
-			d1 = 7;
-			d2 = 7;
-			dice = createDice();
-			dice2 = createDice();
-			dice.position.set(103.5,50,90);
-			dice2.position.set(103.5,50,60);
-            scene.add(dice);
-            scene.add(dice2);
-			dice.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
-			dice2.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
-		});
+			
+		materialDice.color = new THREE.Color(0, 1, 0);
+		let buttonRoll = document.getElementById("roll");
+		buttonRoll.addEventListener("click", throwDices);
 
+		let colorButtons = document.getElementsByClassName("colors")[0].children;
+		for (let i = 0; i < colorButtons.length; i++) {
+			colorButtons[i].addEventListener("click", function() {
+				setDiceColor(this.id);
+				let activeColor = document.querySelector(".active");
+				activeColor.className = "";
+				this.className = "active";
+			});
+		}
+		console.log(colorButtons);
+		console.log(colorButtons);
 			camera.position.set(150, 100, 150);
 			scene.add(board);
 			scene.add(board2);
