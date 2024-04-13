@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S0807: Безкраен тунел</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+		import * as THREE from "three";
+			import {OrbitControls} from "three/addons/controls/OrbitControls.js";
+			import {vaxInitParallax, vaxInitAnaglyph, renderer, scene, light, camera} from "vax";
+
+			// vaxInitParallax(animate);
+			vaxInitAnaglyph(animate);
+
+			light.intensity = 3;
+			camera.focus = 6;
+
+			// тунел от квадратни пръстени
+			let geometry = new THREE.TorusGeometry(30, 3, 4, 4),
+			material = new THREE.MeshLambertMaterial({color: 'yellow'});
+			const N = 80;
+			let toruses = [];
+			for (let index = 0; index < N; index++) {
+				let torus = new THREE.Mesh(geometry, material);
+				torus.position.z = 65 - 10*index;
+				torus.rotation.z = index*Math.PI/(N*4);
+				scene.add(torus);	
+				toruses.push(torus);
+			}
+
+			light.position.set(0, 0, 250);
+
+			let last_z = toruses[toruses.length-1].position.z;
+			function animate(t) {
+				for (let index = 0; index < N; index++) {
+					toruses[index].rotation.z = index*Math.PI/(N*2) + t;
+					if (camera.position.z < toruses[index].position.z) {
+						toruses[index].position.z = last_z - 10;
+						last_z -=10;
+					}
+				}
+				
+				camera.position.z -= t;
+			}
+			
+		</script>
+	</body>
+</html>
+
+
