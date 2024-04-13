@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Зарчета</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script src="three.min.js"></script>
+		<script src="physi.js"></script>
+		<script src="vax.js"></script>
+	</head>
+	
+	<body>
+		<div class="notgui">
+			<h1></h1>
+			<h2></h2>
+			<h3></h3>
+		</div>
+		<div class="nav">
+			<p>Меню</p>
+			<div class="line"></div>
+			<div id="roll">Хвърли зарчетата (D)</div>
+			<div class="line"></div>
+			<p class="subtext">Зарчета</p>
+			<ul class="colors">
+				<li id="white"></li>
+				<li id="red"></li>
+				<li id="green" class="active"></li>
+				<li id="blue"></li>
+				<li id="orange"></li>
+				<li id="purple"></li>
+				<li id="rainbow"></li>
+			</ul>
+			<!-- <div id="roll">Хвърли зарчетата</div> -->
+		</div>
+		<style>
+			.notgui {
+				position: absolute;
+				top: 0;
+				left: 50%;
+				transform: translateX(-50%);
+				
+			}
+			.nav {
+				position: absolute;
+				top: 1%;
+				right: 1%;
+				width: fit-content;
+				height: fit-content;
+				text-align: center;
+				border-radius: 5px;
+				background-color: rgba(138, 138, 138, 0.5);
+				user-select: none;
+			}
+			.nav p {
+				margin: 0;
+				margin-top: 5px;
+			}
+			#roll {
+				background-color: crimson;
+				margin: 5px auto;
+				width: 150px;
+				height: 20px;
+				color: white;
+				text-align: center;
+				cursor: pointer;
+				border-radius: 5px;
+			}
+			#roll:hover {
+				background-color: red;
+			}
+			.line {
+				width: 100%;
+				height: 2px;
+				background-color: darkgray;
+			}
+			.subtext {
+				margin: 0;
+				font-size: 15px;
+			}
+			h1 {
+				text-align: center;
+				margin: 0;
+				margin-top: 1%;
+				padding: 0;
+			}
+			h2 {
+				text-align: center;
+				margin: 0;
+				padding: 0;
+			}
+			h3 {
+				text-align: center;
+				margin: 0;
+				padding: 0;
+			}
+			ul {
+				list-style-type: none;
+				padding: 0;
+				margin: 5px;
+			}
+			li {
+				padding-top: 0;
+				width: 20px;
+				height: 20px;
+				background-color: orange;
+				border-radius: 3px;
+				display: inline-block;
+				cursor: pointer;
+				opacity: 30%;
+			}
+			li.active { opacity: 100%; }
+			li:hover { opacity: 75%; }
+			#white { background-color: white; }
+			#red { background-color: red; }
+			#green { background-color: green; }
+			#blue { background-color: blue; }
+			#orange {background-color: orange; }
+			#purple {background-color: purple; }
+			#rainbow {background: linear-gradient(-45deg, violet, indigo, blue, green, yellow, orange, red); };
+		</style>
+		<script>
+			vaxInit();
+
+			// светлина и сенки
+			renderer.shadowMap.enabled = true;
+			light.shadow.mapSize = new THREE.Vector2( 1024*2, 1024*2 );
+			light.position.set( 0, 300, 150 );
+			light.castShadow = true;
+
+			// по-добра позиция на камерата
+			camera.position.set( 100, 50, 100 );
+			camera.lookAt( new THREE.Vector3(0,20,0) );
+
+			
+			let geometryDice = new THREE.BoxGeometry(12, 12, 12),
+				materialDice = Physijs.createMaterial( new THREE.MeshPhongMaterial({
+					color: 'red', 
+					transparent: true, 
+					opacity: 0.85, 
+					shininess: 40,
+				    specular: 0x101010}));
+			let dotGeometry = new THREE.CylinderGeometry(1, 1, 0),
+				dotMaterial = Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'white'}));
+			//Functions
+			function createDice() {
+				let dice = new Physijs.BoxMesh(geometryDice, materialDice);
+					dice.castShadow = true;
+
+				let l = 3;
+				let d = 6.01;
+				//side 1
+				let dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+					dot.rotation.z = Math.PI/2;
+					dot.position.set(d, 0, 0);
+					dice.add(dot);
+				//side 2
+				for (let i = 0; i < 2; i++) {
+				dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+					dot.position.set(l - 2*i*l, d, l - 2*i*l);
+					dice.add(dot);
+				}
+				//side 6
+				for (let i = 0; i < 2; i++) {
+					for (let j = 0; j < 3; j++) {
+						dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+							dot.rotation.z = Math.PI/2;
+							dot.position.set(-d, 3 - j*l, l - 2*i*l);
+							dice.add(dot);
+					}
+				}
+				//side 4
+				for (let i = 0; i < 2; i++) {
+					for (let j = 0; j < 2; j++) {
+						dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+							dot.rotation.x = Math.PI/2;
+							dot.position.set(l - 2*i*l, 3 - 2*j*l, -d);
+							dice.add(dot);
+					}
+				}
+				//side 5
+				for (let i = 0; i < 2; i++) {
+					for (let j = 0; j < 2; j++) {
+						dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+							dot.position.set(l - 2*i*l, -d, 3 - 2*j*l);
+							dice.add(dot);
+					}
+				}
+				dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+					dot.position.set(0, -d, 0);
+					dice.add(dot);
+				//side 3
+				for (let i = 0; i < 2; i++) {
+				dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+					dot.rotation.x = Math.PI/2;
+					dot.position.set(l - 2*i*l, l - 2*i*l, d);
+					dice.add(dot);
+				}
+				dot = new Physijs.CylinderMesh(dotGeometry, dotMaterial);
+					dot.rotation.x = Math.PI/2;
+					dot.position.set(0, 0, d);
+					dice.add(dot);
+				return dice;
+			}
+			function createBoard() {
+				//board
+				let boardGeometry = new THREE.BoxGeometry( 120, 4, 150 ),
+					boardMaterial = Physijs.createMaterial( new THREE.MeshPhongMaterial({color:0x202020}) );
+				// let board = new Physijs.BoxMesh( boardGeometry, boardMaterial);
+				let board = new Physijs.BoxMesh( boardGeometry, boardMaterial, 0 );
+					board.position.set( 0, 0, 0 );
+					board.receiveShadow = true;
+				//Cover
+				let underGeometry = new THREE.BoxGeometry(120, 2, 150),
+					wallMaterial = Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'brown'}));
+				let underBoard = new  Physijs.BoxMesh( underGeometry, wallMaterial, 0);
+				underBoard.position.y = -3;
+				board.add(underBoard);
+				//Walls
+				for(let i = 0; i < 2; i++) {
+					let wallLRGeometry = new THREE.BoxGeometry(3, 24, 150);
+					let wall = new Physijs.BoxMesh( wallLRGeometry, wallMaterial, 0);
+					wall.position.set(61.5 - 123*i, 8, 0);
+					board.add(wall);
+				}
+				for(let i = 0; i < 2; i++) {
+					let wallLRGeometry = new THREE.BoxGeometry(126, 24, 3);
+					let wall = new Physijs.BoxMesh( wallLRGeometry, wallMaterial, 0);
+					wall.position.set(0, 8, 76.5 - 153*i);
+					board.add(wall);
+				}
+				//triangles
+				let vertices = [
+					60, 0, 0,
+					40, 0, 0,
+					50, 0, 60
+				];
+
+				let indices = [
+					0, 1, 2
+				];
+
+				let triangleGeometry = new THREE.BufferGeometry();
+				triangleGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+				triangleGeometry.setIndex(indices);
+
+				let triangleMaterials = [];
+				let triangleMaterial1 = new THREE.MeshBasicMaterial({ color: 0xFF0000, side: THREE.DoubleSide });
+				let triangleMaterial2 = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide });
+				triangleMaterials.push(triangleMaterial1);
+				triangleMaterials.push(triangleMaterial2);
+
+				let triangle = new THREE.Mesh(triangleGeometry, triangleMaterial1);
+				for(let i = 0; i < 6; i++) {
+					triangle = new THREE.Mesh(triangleGeometry, triangleMaterials[(i+1)%2]);
+					board.add(triangle);
+					triangle.position.set(0 - 20*i,2.01,-75);
+				}
+
+				for(let i = 0; i < 6; i++) {
+					triangle = new THREE.Mesh(triangleGeometry, triangleMaterials[i%2]);
+					board.add(triangle);
+					triangle.rotation.y = Math.PI;
+					triangle.position.set(100 - 20*i,2.01,75);
+				}
+				return board;
+
+			}
+			function getDiceValue(dice) {
+				if(dice.rotation.x < -1.5 && dice.rotation.x > -1.6) return 3;
+				if(dice.rotation.x > 1.5 && dice.rotation.x < 1.6) return 4;
+				if((dice.rotation.x > -0.1 && dice.rotation.x < 0.1) || (Math.abs(dice.rotation.x) > 3 && Math.abs(dice.rotation.x) < 3.2)) {
+					let sum = Math.abs(dice.rotation.x) + dice.rotation.z;
+					if((sum < 0.1 && sum > -0.1) || (sum < 6.4 && sum > 6)) return 2;
+					if((sum > 3 && sum < 3.2) || (sum < -3 && sum > -3.2)) return 5;
+					if((sum > 4.5 && sum < 5) || (sum < -1.5 && sum > -1.6)) return 6;
+					if(sum > 1.5 && sum < 1.6) return 1;
+				}
+				return 0;
+			}
+			function updateScore(dice1, dice2) {
+				let h1 = document.querySelector("h1");
+				let h2 = document.querySelector("h2");
+				let h3 = document.querySelector("h3");
+				h1.textContent = "Резултат:";
+				h3.textContent = "";
+				if(dice1 != 0 && dice2 != 0) {
+					h2.textContent = `${dice1} + ${dice2} = ${dice1 + dice2}`;
+					if(dice1 == dice2) {
+						switch (dice1) {
+							case 1: h3.textContent = "/еци/";
+								break;
+							case 2: h3.textContent = "/дьорджухар/";
+								break;
+							case 3: h3.textContent = "/дюсе/";
+								break;
+							case 4: h3.textContent = "/дюбара/";
+								break;
+							case 5: h3.textContent = "/дюбеш/";
+								break;
+							case 6: h3.textContent = "/дюшеш/";
+								break;
+							default: break;
+						}
+					}
+				} else {
+						h2.textContent = "Калъч";
+				}
+			}
+			function setDiceColor(color) {
+				if(color != "rainbow") {
+					materialDice.color = new THREE.Color(color);
+					if(color == "white" || color == "orange") {
+						dotMaterial.color = new THREE.Color("black");
+					} else {
+						dotMaterial.color = new THREE.Color("white");
+					}
+				} else {
+					materialDice.color = new THREE.Color().setHSL(THREE.MathUtils.randFloat(0, 1), 1, 0.5);
+					dotMaterial.color = new THREE.Color("white");
+				}
+			}	
+			function throwDices() {
+				if(dice && dice2) {
+					scene.remove(dice);
+					scene.remove(dice2);
+				}
+				d1 = 7;
+				d2 = 7;
+				dice = createDice();
+				dice2 = createDice();
+				dice.position.set(103.5,50,90);
+				dice2.position.set(103.5,50,60);
+				scene.add(dice);
+				scene.add(dice2);
+				dice.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
+				dice2.applyForce( new THREE.Vector3( THREE.MathUtils.randInt(-200000, -300000), 0, THREE.MathUtils.randInt(-200000, -300000) ), new THREE.Vector3( THREE.MathUtils.randInt(10, 18), THREE.MathUtils.randInt(5, 12), THREE.MathUtils.randInt(5, 10)) );
+			}
+			//Events
+			let dKeyPressed = false;
+			document.addEventListener("keydown", function(event) {
+				if(event.key == "D" || event.key == "d" || event.keyCode == 68) {
+					throwDices();
+				}
+			})
+			let board = createBoard();
+			let board2 = createBoard();
+			board.position.x = 63.5;
+			board2.position.x = -63.5;
+			let hingeGeometry = new THREE.CylinderGeometry(1,1, 154),
+				hingeMaterial = new Physijs.createMaterial( new THREE.MeshPhongMaterial({color: 'silver'}));
+			let hinge = new Physijs.CylinderMesh(hingeGeometry, hingeMaterial, 0);
+			hinge.rotation.x = Math.PI/2;
+			hinge.position.y = 20;
+
+
+			
+		let dice;
+		let dice2;
+		let d1 = 7;
+		let d2 = 7;
+			
+		materialDice.color = new THREE.Color(0, 1, 0);
+		let buttonRoll = document.getElementById("roll");
+		buttonRoll.addEventListener("click", throwDices);
+
+		let colorButtons = document.getElementsByClassName("colors")[0].children;
+		for (let i = 0; i < colorButtons.length; i++) {
+			colorButtons[i].addEventListener("click", function() {
+				setDiceColor(this.id);
+				let activeColor = document.querySelector(".active");
+				activeColor.className = "";
+				this.className = "active";
+			});
+		}
+		console.log(colorButtons);
+		console.log(colorButtons);
+			camera.position.set(150, 100, 150);
+			scene.add(board);
+			scene.add(board2);
+			scene.add(hinge);
+			function animate(t)
+			{		
+					if (dice && dice2 && dice.position.y < 50) {
+						if(dice.getLinearVelocity().x == 0 && dice.getLinearVelocity().y == 0 && dice.getLinearVelocity().z == 0) {
+							d1 = getDiceValue(dice);
+						}
+						if(dice2.getLinearVelocity().x == 0 && dice2.getLinearVelocity().y == 0 && dice2.getLinearVelocity().z == 0) {
+							d2 = getDiceValue(dice2);
+						}
+						if(d1 < 7 && d2 < 7) {
+							updateScore(d1, d2);
+						}
+
+					}
+				scene.rotation.y = -t;
+				scene.simulate( 1/10 );
+			}
+		</script>
+	</body>
+</html>
+
+
