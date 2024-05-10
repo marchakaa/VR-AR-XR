@@ -15,12 +15,51 @@
 			// функция, която поисква и показва геолокацията
 			function getLocation()
 			{
-				//
+				if(navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure);
+				} else {
+					result.innerHTML = "Браузърът не поддържа геолокация.";
+				}
+			}
+			function geoSuccess(position) {
+				var result = document.getElementById('result');
+
+				result.innerHTML += '<br>Географска ширина: ' + position.coords.latitude;
+				result.innerHTML += '<br>Географска дължина: ' + position.coords.longitude;
+				result.innerHTML += '<br>Вероятност: 95%';
+				result.innerHTML += '<br>Точност: ' + position.coords.accuracy + ' метра';
+				let latitude = position.coords.latitude;
+				let longitude = position.coords.longitude;
+				let latitudeDeg, latitudeMin, latitudeSec, longitudeDeg, longitudeMin, longitudeSec;
+				latitudeDeg = Math.floor(latitude);
+					latitudeMin = Math.floor((latitude - latitudeDeg)*60);
+					latitudeSec = (((latitude - latitudeDeg)*60) - latitudeMin)*60;
+					
+					longitudeDeg = Math.floor(longitude);
+					longitudeMin = Math.floor((longitude - longitudeDeg)*60);
+					longitudeSec = (((longitude - longitudeDeg)*60) - longitudeMin)*60;
+					// window.open('https://www.google.com/maps/place/42%C2%B038\'38.4%22N+23%C2%B020\'25.2%22E');
+					// window.open('https://www.openstreetmap.org/#map=12/' + position.coords.latitude + '/' + position.coords.longitude);
+				window.open('https://www.google.com/maps/place/' + latitudeDeg + '%C2%B0' + latitudeMin + '\'' + latitudeSec + '%22N+' + longitudeDeg + '%C2%B0' + longitudeMin + '\'' + longitudeSec + '%22E');
+			}
+			function geoFailure(error) {
+				var result = document.getElementById('result');
+
+				if (error.code == error.POSITION_UNAVAILABLE)
+					result.innerHTML = 'Геолокацията е недостъпна.';
+				else if (error.code == error.PERMISSION_DENIED)
+					result.innerHTML = 'Потребителят не се е съгласил да сподели геолокацията си.';
+				else if (error.code == error.TIMEOUT)
+					result.innerHTML = 'Времето за извличане на данните е изтече.';
+				else if (error.code == error.UNKNOWN_ERROR)
+					result.innerHTML = 'Неизвестна грешка при извличане на геолокацията.';
 			}
 			
 		</script>
 		
 		<button onclick="getLocation()">Къде съм?</button>
+		<hr>
+		<div id="result" style="boder:solid 1px black"></div>
 	</body>
 </html>
 
