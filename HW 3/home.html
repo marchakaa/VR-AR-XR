@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework 3.8</title>
+	<script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+            "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+          }
+        }
+    </script>
+</head>
+<body>
+    <script type="module">
+		
+        import * as THREE from "three";
+        import {vaxInit, renderer, scene, light, camera} from "vax";
+
+        vaxInit(animate);
+
+        // camera.position.set(500,500,0);
+        camera.position.set(0,0,0);
+        // camera.lookAt(new THREE.Vector3(0,0,0));
+        light.position.set(0,0,0);
+
+        let cube = new THREE.Group();
+        const SIZE = 200;
+        const CUBE_COLOR = 0x00AA00;    
+        const LINE_COLOR = 0x050505;    
+        scene.add(cube);
+        let wallF = new THREE.Mesh(new THREE.BoxGeometry(SIZE, SIZE, 1), new THREE.MeshPhongMaterial({color:CUBE_COLOR}));
+        wallF.position.z = -SIZE/2;
+        let wallB = new THREE.Mesh(new THREE.BoxGeometry(SIZE, SIZE, 1), new THREE.MeshPhongMaterial({color:CUBE_COLOR}));
+        wallB.position.z = SIZE/2;
+        let wallL = new THREE.Mesh(new THREE.BoxGeometry(1, SIZE, SIZE), new THREE.MeshPhongMaterial({color:CUBE_COLOR}));
+        wallL.position.x = SIZE/2;
+        let wallR = new THREE.Mesh(new THREE.BoxGeometry(1, SIZE, SIZE), new THREE.MeshPhongMaterial({color:CUBE_COLOR}));
+        wallR.position.x = -SIZE/2;
+        let wallT = new THREE.Mesh(new THREE.BoxGeometry(SIZE, 1, SIZE), new THREE.MeshPhongMaterial({color:CUBE_COLOR}));
+        wallT.position.y = SIZE/2;
+        let wallBo = new THREE.Mesh(new THREE.BoxGeometry(SIZE, 1, SIZE), new THREE.MeshPhongMaterial({color:CUBE_COLOR}));
+        wallBo.position.y = -SIZE/2;
+        cube.add(wallF, wallB, wallL, wallR, wallBo, wallT);
+
+
+        for (let i = 0; i < 10; i++) {
+            let horizontalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE, SIZE/400, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+            horizontalLine.position.z = -SIZE/2 + 1;
+            horizontalLine.position.y = -SIZE/2 + 1 + i*(SIZE/10);
+            cube.add(horizontalLine);
+        }
+            let horizontalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE, SIZE/400, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+            horizontalLine.position.z = -SIZE/2 + 1;
+            horizontalLine.position.y = SIZE/2 - 0.5;
+            cube.add(horizontalLine);
+        for (let j = 0; j < 10; j++) {
+            let verticalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE/400, SIZE, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+            verticalLine.position.z = -SIZE/2 + 1;
+            verticalLine.position.x = -SIZE/2 + 1 + j*(SIZE/10);
+            cube.add(verticalLine);
+        }            
+            let verticalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE/400, SIZE, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+            verticalLine.position.z = -SIZE/2 + 1;
+            verticalLine.position.x = SIZE/2 - 0.5;
+            cube.add(verticalLine);
+
+        const N = SIZE/2;
+        for (let k = 0; k < 4; k++) {
+            for (let i = 0; i < N; i++) {
+            let cone = new THREE.Mesh(new THREE.ConeGeometry(SIZE/40,SIZE/10,32), new THREE.MeshPhongMaterial());
+            let color = new THREE.Color().setHSL(THREE.MathUtils.randFloat(0, 1), 1, 0.5);
+            cone.material.color = color;
+            let x = THREE.MathUtils.randFloat(-SIZE/2 + SIZE/40, SIZE/2 - SIZE/40);
+            let y = THREE.MathUtils.randFloat(-SIZE/2 + SIZE/20, SIZE/2 - SIZE/20);
+            let z = THREE.MathUtils.randFloat(-SIZE/2 + SIZE/40, SIZE/2 - SIZE/40);
+
+            switch (k) {
+                case 0:
+                    z = -SIZE/2 + SIZE/40;
+                    cone.rotation.z = THREE.MathUtils.randFloat(0.2, -0.2);
+                    break;
+                case 1:
+                    x = SIZE/2 - SIZE/40;
+                    cone.rotation.x = THREE.MathUtils.randFloat(0.2, -0.2);
+                    break;
+                case 2:
+                    z = SIZE/2 - SIZE/40;
+                    cone.rotation.z = THREE.MathUtils.randFloat(0.2, -0.2);
+                    break;
+                case 3:
+                    x = -SIZE/2 + SIZE/40;
+                    cone.rotation.x = THREE.MathUtils.randFloat(0.2, -0.2);
+                    break;
+            }
+
+            cone.position.set(x, y, z);
+            
+            cube.add(cone);
+            }
+        }
+
+
+        let pointerX = 0;
+		let pointerY = 0;
+		window.addEventListener('pointermove', (event) => {
+			pointerX = event.clientX;
+			pointerY = event.clientY;
+		});
+        
+		const centerX = window.innerWidth / 2;
+		const centerY = window.innerHeight / 2;
+
+		function followCursor(x, y) {
+            cube.rotation.y = x * Math.PI/300;
+            cube.rotation.x = y * Math.PI/300;
+		}
+        
+
+        let alpha = 0;
+        let beta = 0;
+        let gamma = 0;
+		window.addEventListener("deviceorientation", deviceOrientation, true);
+        
+		function deviceOrientation(event)
+		{
+            alpha = event.alpha.toFixed(1);
+            beta = event.beta.toFixed(1);
+            gamma = event.gamma.toFixed(1);
+		}
+        function rotateCubeWithPhone(a, b, g) {
+            cube.rotation.y = -THREE.MathUtils.degToRad(a);
+            cube.rotation.x = THREE.MathUtils.degToRad(g);
+        }
+
+		function animate(t) {
+            // camera.rotation.y += 0.01;
+            followCursor(pointerX, pointerY);
+            rotateCubeWithPhone(alpha, beta, gamma);
+
+		}
+    </script>
+    
+</body>
+</html>
