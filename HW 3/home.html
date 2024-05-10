@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homework 3.1</title>
+    <title>Homework 3.2</title>
 	<script type="importmap">
         {
           "imports": {
@@ -22,8 +22,9 @@
     <script type="module">
 		
         import * as THREE from "three";
-        import {vaxInit, renderer, scene, light, camera} from "vax";
+        import {vaxInit, vaxInitParallax, renderer, scene, light, camera} from "vax";
 
+        // vaxInitParallax(animate);
         vaxInit(animate);
 
         // camera.position.set(500,500,0);
@@ -141,7 +142,7 @@
 		}
         function rotateCubeWithPhone(a, b, g) {
             cube.rotation.y = -THREE.MathUtils.degToRad(a);
-            cube.rotation.x = THREE.MathUtils.degToRad(g);
+            cube.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
         }
 
 		function animate(t) {
