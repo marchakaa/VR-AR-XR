@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homework 3.5</title>
+    <title>Homework 3.6</title>
 	<script type="importmap">
         {
           "imports": {
@@ -132,13 +132,7 @@
         
 		function deviceOrientation(event)
 		{
-            if (event.gamma.toFixed(1) < 0) {
-				document.getElementById('alpha').innerHTML = 360 - event.alpha.toFixed(1);
-
-            } else {
-
 				document.getElementById('alpha').innerHTML = event.alpha.toFixed(1);
-            }
 				document.getElementById('beta').innerHTML = event.beta.toFixed(1);
 				document.getElementById('gamma').innerHTML = event.gamma.toFixed(1);
 				document.getElementById('absolute').innerHTML = event.absolute.toFixed(1);
