@@ -18,7 +18,6 @@
     <h3>alpha = <span id="alpha"></span></h3>
     <h3>beta = <span id="beta"></span></h3>
     <h3>gamma = <span id="gamma"></span></h3>
-    <h3>absolute = <span id="absolute"></span></h3>
     <script type="module">
 		
         import * as THREE from "three";
@@ -128,10 +127,10 @@
         
 		function deviceOrientation(event)
 		{
+            cube.rotation.y = THREE.MathUtils.degToRad(event.alpha.toFixed(1));
 			document.getElementById('alpha').innerHTML = event.alpha.toFixed(1);
 			document.getElementById('beta').innerHTML = event.beta.toFixed(1);
 			document.getElementById('gamma').innerHTML = event.gamma.toFixed(1);
-			document.getElementById('absolute').innerHTML = event.absolute.toFixed(1);
 		}
 
 		function animate(t) {
