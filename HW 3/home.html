@@ -15,6 +15,7 @@
     </script>
 </head>
 <body>
+    <h3>alpha = <span id="version"></span></h3>
     <h3>alpha = <span id="alpha"></span></h3>
     <h3>beta = <span id="beta"></span></h3>
     <h3>gamma = <span id="gamma"></span></h3>
@@ -123,19 +124,29 @@
 		}
         
 
+        let alpha = 0;
+        let beta = 0;
+        let gamma = 0;
 		window.addEventListener("deviceorientation", deviceOrientation, true);
         
 		function deviceOrientation(event)
 		{
-            cube.rotation.y = THREE.MathUtils.degToRad(event.alpha.toFixed(1));
+            alpha = event.alpha.toFixed(1);
+            beta = event.beta.toFixed(1);
+            gamma = event.gamma.toFixed(1);
+			document.getElementById('version').innerHTML = "0.2";
 			document.getElementById('alpha').innerHTML = event.alpha.toFixed(1);
 			document.getElementById('beta').innerHTML = event.beta.toFixed(1);
 			document.getElementById('gamma').innerHTML = event.gamma.toFixed(1);
 		}
+        function rotateCubeWithPhone(a, b, g) {
+            cube.rotation.y = THREE.MathUtils.degToRad(a);
+        }
 
 		function animate(t) {
             // camera.rotation.y += 0.01;
             followCursor(pointerX, pointerY);
+            rotateCubeWithPhone(alpha, beta, gamma);
 
 		}
     </script>
