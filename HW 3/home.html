@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homework 3.5</title>
+    <title>Homework 3.6</title>
 	<script type="importmap">
         {
           "imports": {
@@ -206,9 +206,9 @@
         function rotateCubeWithPhone(a, g) {
                 if (g < 0) {
                     if(a>180) {
-                        cube.rotation.y = THREE.MathUtils.degToRad(a - 180);
+                        cube.rotation.y = THREE.MathUtils.degToRad(a) - Math.PI;
                     } else {
-                        cube.rotation.y = THREE.MathUtils.degToRad(a + 180);
+                        cube.rotation.y = THREE.MathUtils.degToRad(a) + Math.PI;
                     }
                 } else {
                 cube.rotation.y = -THREE.MathUtils.degToRad(a);
