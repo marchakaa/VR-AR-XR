@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homework 3.7</title>
+    <title>Homework 3.8</title>
 	<script type="importmap">
         {
           "imports": {
@@ -48,29 +48,81 @@
         cube.add(wallF, wallB, wallL, wallR, wallBo, wallT);
 
 
-        for (let i = 0; i < 10; i++) {
-            let horizontalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE, SIZE/400, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
-            horizontalLine.position.z = -SIZE/2 + 1;
-            horizontalLine.position.y = -SIZE/2 + 1 + i*(SIZE/10);
-            cube.add(horizontalLine);
+        //Front, back grid
+        for (let k = 0; k < 2; k++) {
+            for (let i = 0; i < 10; i++) {
+                let horizontalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE, SIZE/400, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                horizontalLine.position.z = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                horizontalLine.position.y = -SIZE/2 + 1 + i*(SIZE/10);
+                cube.add(horizontalLine);
+            }
+                let horizontalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE, SIZE/400, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                horizontalLine.position.z = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                horizontalLine.position.y = SIZE/2 - 0.5;
+                cube.add(horizontalLine);
+            for (let j = 0; j < 10; j++) {
+                let verticalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE/400, SIZE, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                verticalLine.position.z = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                verticalLine.position.x = -SIZE/2 + 1 + j*(SIZE/10);
+                cube.add(verticalLine);
+            }            
+                let verticalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE/400, SIZE, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                verticalLine.position.z = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                verticalLine.position.x = SIZE/2 - 0.5;
+                cube.add(verticalLine);
+            
         }
-            let horizontalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE, SIZE/400, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
-            horizontalLine.position.z = -SIZE/2 + 1;
-            horizontalLine.position.y = SIZE/2 - 0.5;
-            cube.add(horizontalLine);
-        for (let j = 0; j < 10; j++) {
-            let verticalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE/400, SIZE, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
-            verticalLine.position.z = -SIZE/2 + 1;
-            verticalLine.position.x = -SIZE/2 + 1 + j*(SIZE/10);
-            cube.add(verticalLine);
-        }            
-            let verticalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE/400, SIZE, 1), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
-            verticalLine.position.z = -SIZE/2 + 1;
-            verticalLine.position.x = SIZE/2 - 0.5;
-            cube.add(verticalLine);
+        //Left, right grid
+        for (let k = 0; k < 2; k++) {
+            for (let i = 0; i < 10; i++) {
+                let horizontalLine = new THREE.Mesh(new THREE.BoxGeometry(1, SIZE/400, SIZE), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                horizontalLine.position.x = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                horizontalLine.position.y = -SIZE/2 + 1 + i*(SIZE/10);
+                cube.add(horizontalLine);
+            }
+                let horizontalLine = new THREE.Mesh(new THREE.BoxGeometry(1, SIZE/400, SIZE), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                horizontalLine.position.x = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                horizontalLine.position.y = SIZE/2 - 0.5;
+                cube.add(horizontalLine);
+            for (let j = 0; j < 10; j++) {
+                let verticalLine = new THREE.Mesh(new THREE.BoxGeometry(1, SIZE, SIZE/400), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                verticalLine.position.x = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                verticalLine.position.z = -SIZE/2 + 1 + j*(SIZE/10);
+                cube.add(verticalLine);
+            }            
+                let verticalLine = new THREE.Mesh(new THREE.BoxGeometry(1, SIZE, SIZE/400), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                verticalLine.position.x = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                verticalLine.position.z = SIZE/2 - 0.5;
+                cube.add(verticalLine);
+            
+        }
+        //Top, Bottom grid
+        for (let k = 0; k < 2; k++) {
+            for (let i = 0; i < 10; i++) {
+                let horizontalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE/400, 1, SIZE), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                horizontalLine.position.y = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                horizontalLine.position.x = -SIZE/2 + 1 + i*(SIZE/10); //x->y, y->z, z->x
+                cube.add(horizontalLine);
+            }
+                let horizontalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE/400, 1, SIZE), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                horizontalLine.position.y = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                horizontalLine.position.x = SIZE/2 - 0.5;
+                cube.add(horizontalLine);
+            for (let j = 0; j < 10; j++) {
+                let verticalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE, 1, SIZE/400), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                verticalLine.position.y = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                verticalLine.position.z = -SIZE/2 + 1 + j*(SIZE/10);
+                cube.add(verticalLine);
+            }            
+                let verticalLine = new THREE.Mesh(new THREE.BoxGeometry(SIZE, 1, SIZE/400), new THREE.MeshPhongMaterial({color: LINE_COLOR}));
+                verticalLine.position.y = (-SIZE/2 + 1)*(Math.pow(-1,k));
+                verticalLine.position.z = SIZE/2 - 0.5;
+                cube.add(verticalLine);
+            
+        }
 
-        const N = SIZE/2;
-        for (let k = 0; k < 4; k++) {
+        const N = SIZE/3;
+        for (let k = 0; k < 6; k++) {
             for (let i = 0; i < N; i++) {
             let cone = new THREE.Mesh(new THREE.ConeGeometry(SIZE/40,SIZE/10,32), new THREE.MeshPhongMaterial());
             let color = new THREE.Color().setHSL(THREE.MathUtils.randFloat(0, 1), 1, 0.5);
@@ -95,6 +147,15 @@
                 case 3:
                     x = -SIZE/2 + SIZE/40;
                     cone.rotation.x = THREE.MathUtils.randFloat(0.2, -0.2);
+                    break;
+                case 4:
+                    y = -SIZE/2 + SIZE/10;
+                    cone.rotation.x = THREE.MathUtils.randFloat(0.2, -0.2);
+                    break;
+                case 5:
+                    y = SIZE/2 - SIZE/10;
+                    cone.rotation.x = THREE.MathUtils.randFloat(0.2, -0.2);
+                    cone.rotation.z = Math.PI;
                     break;
             }
 
@@ -138,7 +199,7 @@
             } else {
                 cube.rotation.y = -THREE.MathUtils.degToRad(a);
             }
-            cube.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
+            // cube.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
         }
 
 		function animate(t) {
