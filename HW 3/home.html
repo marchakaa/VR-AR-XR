@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homework 3.8</title>
+    <title>Homework 3.9</title>
 	<script type="importmap">
         {
           "imports": {
@@ -15,6 +15,8 @@
     </script>
 </head>
 <body>
+    <h3>alpha = <span id="alpha"></span></h3>
+    <h3>gamma = <span id="gamma"></span></h3>
     <script type="module">
 		
         import * as THREE from "three";
@@ -183,29 +185,29 @@
         
 
         let alpha = 0;
-        let beta = 0;
         let gamma = 0;
 		window.addEventListener("deviceorientation", deviceOrientation, true);
         
 		function deviceOrientation(event)
 		{
+				document.getElementById('alpha').innerHTML = event.alpha.toFixed(1);
+				document.getElementById('gamma').innerHTML = event.gamma.toFixed(1);
             alpha = event.alpha.toFixed(1);
-            beta = event.beta.toFixed(1);
             gamma = event.gamma.toFixed(1);
 		}
-        function rotateCubeWithPhone(a, b, g) {
+        function rotateCubeWithPhone(a, g) {
             if (g < 0) {
                 cube.rotation.y = -THREE.MathUtils.degToRad(360 - a);
             } else {
                 cube.rotation.y = -THREE.MathUtils.degToRad(a);
             }
-            // cube.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
+            cube.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
         }
 
 		function animate(t) {
             // camera.rotation.y += 0.01;
             followCursor(pointerX, pointerY);
-            rotateCubeWithPhone(alpha, beta, gamma);
+            rotateCubeWithPhone(alpha, gamma);
 
 		}
     </script>
