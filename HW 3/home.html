@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homework 3.8</title>
+    <title>Homework 3.9</title>
 	<script type="importmap">
         {
           "imports": {
@@ -15,6 +15,10 @@
     </script>
 </head>
 <body>
+    <h3>alpha = <span id="alpha"></span></h3>
+    <h3>beta = <span id="beta"></span></h3>
+    <h3>gamma = <span id="gamma"></span></h3>
+    <h3>absolute = <span id="absolute"></span></h3>
     <script type="module">
 		
         import * as THREE from "three";
@@ -127,6 +131,10 @@
         
 		function deviceOrientation(event)
 		{
+				document.getElementById('alpha').innerHTML = event.alpha.toFixed(1);
+				document.getElementById('beta').innerHTML = event.beta.toFixed(1);
+				document.getElementById('gamma').innerHTML = event.gamma.toFixed(1);
+				document.getElementById('absolute').innerHTML = event.absolute.toFixed(1);
             alpha = event.alpha.toFixed(1);
             beta = event.beta.toFixed(1);
             gamma = event.gamma.toFixed(1);
