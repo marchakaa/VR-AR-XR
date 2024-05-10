@@ -141,7 +141,11 @@
             gamma = event.gamma.toFixed(1);
 		}
         function rotateCubeWithPhone(a, b, g) {
-            cube.rotation.y = -THREE.MathUtils.degToRad(a);
+            if (g < 0) {
+                cube.rotation.y = -THREE.MathUtils.degToRad(360 - a);
+            } else {
+                cube.rotation.y = -THREE.MathUtils.degToRad(a);
+            }
             cube.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
         }
 
