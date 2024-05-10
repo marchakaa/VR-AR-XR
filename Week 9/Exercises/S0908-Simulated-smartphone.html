@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>E0908: Симулиран смартфон</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {vaxInit, scene, light, camera} from "vax";
+
+			vaxInit();
+			
+			scene.background = new THREE.Color( 'white' );
+
+			camera.position.set(0, 0, 20);
+			camera.lookAt(new THREE.Vector3(0, 0, 0));
+			
+			// смартфон
+			var smartphone = new THREE.Group();
+				smartphone.rotation.set( 0.5, 1, 0 );
+
+			// корпус
+			var geometry = new THREE.BoxGeometry(7, 0.8, 15),
+				material = new THREE.MeshPhongMaterial({
+					color: 'black',
+					shininess: 50
+				}),
+				board = new THREE.Mesh(geometry, material);
+
+			// екран
+			geometry = new THREE.BoxGeometry(6.5, 0.8, 14.5);
+			material = new THREE.MeshPhongMaterial({
+				color: 'aliceblue',
+				shininess: 50
+			});
+			
+			var screen = new THREE.Mesh(geometry, material);
+			screen.position.y = 0.05;
+
+			// USB
+			geometry = new THREE.BoxGeometry(0.8, 0.2, 0.1),
+			material = new THREE.MeshPhongMaterial({
+				color: 'gray',
+				shininess: 50
+			});
+			
+			var usb = new THREE.Mesh(geometry, material);
+			usb.position.z = 7.5;
+
+			smartphone.add(board, screen, usb);
+			scene.add(smartphone);
+			
+		</script>
+	</body>
+</html>
+
+

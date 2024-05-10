@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>E1104: Грешни UV координати</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {vaxInit, scene} from "vax";
+
+			vaxInit(animate);
+
+			var texture = new THREE.TextureLoader().load('images/cube.png');
+				texture.wrapS = THREE.RepeatWrapping;
+				texture.wrapT = THREE.RepeatWrapping;
+				texture.repeat.set(6, 2);
+
+			var geometry = new THREE.BoxGeometry(90, 30, 15),
+				material = new THREE.MeshBasicMaterial({map: texture}),
+				wall = new THREE.Mesh(geometry, material);
+
+			scene.add(wall);
+
+			function animate(t)
+			{
+				wall.rotation.set(0.5, t/2, 0, 'ZXY');
+			}
+			
+		</script>
+		
+	</body>
+</html>
+
+
