@@ -15,9 +15,6 @@
     </script>
 </head>
 <body>
-    <!-- <h3>alpha = <span id="alpha"></span></h3>
-    <h3>gamma = <span id="gamma"></span></h3>
-    <h3>newalpha = <span id="newalpha"></span></h3> -->
     <script type="module">
 		
         import * as THREE from "three";
@@ -26,9 +23,7 @@
         vaxInitParallax(animate, -1);
         // vaxInit(animate);
 
-        // camera.position.set(500,500,0);
         camera.position.set(0,0,0);
-        // camera.lookAt(new THREE.Vector3(0,0,0));
         light.position.set(0,0,0);
 
         let cube = new THREE.Group();
@@ -193,15 +188,6 @@
 		{
             alpha = event.alpha.toFixed(1);
             gamma = event.gamma.toFixed(1);
-				// document.getElementById('alpha').innerHTML = alpha;
-				// document.getElementById('gamma').innerHTML = gamma;
-                // if (gamma < 0) {
-                //     if(alpha>180) {
-				//         document.getElementById('newalpha').innerHTML = alpha - 180;
-                //     } else {
-				//         document.getElementById('newalpha').innerHTML = alpha + 180;
-                //     }
-                // }
 		}
         function rotateCubeWithPhone(a, g) {
                 if (g < 0) {
