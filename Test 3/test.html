@@ -19,6 +19,7 @@
 	</head>
 	
 	<body>
+		<h3>beta = <span id="beta"></span></h3>
 		<script type="module">
 		
 			import * as THREE from "three";
@@ -78,6 +79,7 @@
 		{
             alpha = event.alpha.toFixed(1);
             gamma = event.gamma.toFixed(1);
+            document.getElementById('beta').innerHTML = event.beta.toFixed(1);
 		}
         function rotateCubeWithPhone(a, g) {
                 if (g < 0) {
