@@ -63,14 +63,19 @@
             transparent: true,
             opacity: 0.6
         }));
-        if (i%4 == 0) {
-            sphere.position.set(THREE.MathUtils.randInt(300, 600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(-500, 700));
-        } else if(i%4 == 1) {
-            sphere.position.set(THREE.MathUtils.randInt(-300, -600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(-500, 700));
-        } else if (i%4 == 2) {
-            sphere.position.set(THREE.MathUtils.randInt(600, -600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(400, 700));
+        sphere.position.y = THREE.MathUtils.randInt(-50, 150);
+        if(i % 4 == 0) {
+            sphere.position.x = THREE.MathUtils.randInt(-500, 500);
+            sphere.position.z = -(500 + THREE.MathUtils.randInt(0, 200));
+        } else if (i % 4 == 1) {
+            sphere.position.x = THREE.MathUtils.randInt(-500, 500);
+            sphere.position.z = (500 + THREE.MathUtils.randInt(0, 200));
+        } else if (i % 4 == 2) {
+            sphere.position.x = -(500 + THREE.MathUtils.randInt(0, 200));
+            sphere.position.z = THREE.MathUtils.randInt(-500, 500);
         } else {
-            sphere.position.set(THREE.MathUtils.randInt(600, -600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(-200, 500));
+            sphere.position.x = (500 + THREE.MathUtils.randInt(0, 200));
+            sphere.position.z = THREE.MathUtils.randInt(-500, 500);
         }
         spheres.push(sphere);
         scene.add(sphere);
@@ -119,7 +124,7 @@
                 });
                 // controls.update();
                 // camera.rotation.y += 0.005;
-                rotateCubeWithPhone(alpha, beta, gamma);
+                // rotateCubeWithPhone(alpha, beta, gamma);
                 renderer.render(scene, camera);
 			}
 			
