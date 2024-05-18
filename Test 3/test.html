@@ -108,6 +108,7 @@
             }
         }
 
+        camera.rotation.y = Math.PI/2;
 			function animate()
 			{
                 spheres.forEach(sphere => {
@@ -116,7 +117,7 @@
                     sphere.rotation.z += 0.004; 
                 });
                 // controls.update();
-                camera.rotation.y += 0.005;
+                // camera.rotation.y += 0.005;
                 rotateCubeWithPhone(alpha, beta, gamma);
                 renderer.render(scene, camera);
 			}
