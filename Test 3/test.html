@@ -73,28 +73,29 @@
         
         let alpha = 0;
         let gamma = 0;
+        let beta = 0;
 		window.addEventListener("deviceorientation", deviceOrientation, true);
         
 		function deviceOrientation(event)
 		{
             alpha = event.alpha.toFixed(1);
             gamma = event.gamma.toFixed(1);
-            document.getElementById('beta').innerHTML = event.beta.toFixed(1);
+            beta = event.beta.toFixed(1);
 		}
         function rotateCubeWithPhone(a, g) {
+            if(beta > 0) {
+
                 if (g < 0) {
+                    camera.rotation.x = Math.PI/2 + Math.PI/2 + THREE.MathUtils.degToRad(g) - Math.PI/2;
                     if(a>180) {
                         camera.rotation.y = (THREE.MathUtils.degToRad(a) - Math.PI);
                     } else {
                         camera.rotation.y = (THREE.MathUtils.degToRad(a) + Math.PI);
                     }
                 } else {
-                camera.rotation.y = THREE.MathUtils.degToRad(a);
+                    camera.rotation.y = THREE.MathUtils.degToRad(a);
+                    camera.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
                 }
-            if(g<0)  {
-                camera.rotation.x = Math.PI/2 + Math.PI/2 + THREE.MathUtils.degToRad(g) - Math.PI/2;
-            } else {
-                camera.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
             }
         }
 			function animate()
