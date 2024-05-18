@@ -91,12 +91,24 @@
             beta = event.beta.toFixed(1);
 		}
         
-        
-        function rotateCameraWithQuaternions(a, b, g) {
-            const euler = new THREE.Euler(THREE.MathUtils.degToRad(b), THREE.MathUtils.degToRad(a), THREE.MathUtils.degToRad(-g), 'YXZ');
-            camera.quaternion.setFromEuler(euler);
+        function rotateCubeWithPhone(a, b, g) {
+            if(g<0)  {
+                camera.rotation.x = Math.PI/2 + Math.PI/2 + THREE.MathUtils.degToRad(g) - Math.PI/2;
+            } else {
+                camera.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
+            }
+            
+            if (g < 0) {
+                    if(a>180) {
+                        camera.rotation.y = (THREE.MathUtils.degToRad(a) - Math.PI);
+                    } else {
+                        camera.rotation.y = (THREE.MathUtils.degToRad(a) + Math.PI);
+                    }
+                } else {
+                camera.rotation.y = THREE.MathUtils.degToRad(a);
+                }
+            
         }
-
 
         camera.rotation.y = Math.PI/2;
 			function animate()
@@ -108,7 +120,7 @@
                 });
                 // controls.update();
                 // camera.rotation.y += 0.005;
-                rotateCameraWithQuaternions(alpha, beta, gamma);
+                rotateCubeWithPhone(alpha, beta, gamma);
                 renderer.render(scene, camera);
 			}
 			
