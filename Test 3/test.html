@@ -97,7 +97,7 @@
             camera.quaternion.setFromEuler(euler);
         }
 
-        
+
         camera.rotation.y = Math.PI/2;
 			function animate()
 			{
@@ -108,7 +108,7 @@
                 });
                 // controls.update();
                 // camera.rotation.y += 0.005;
-                rotateCubeWithPhone(alpha, beta, gamma);
+                rotateCameraWithQuaternions(alpha, beta, gamma);
                 renderer.render(scene, camera);
 			}
 			
