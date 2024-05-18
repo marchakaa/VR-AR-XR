@@ -91,23 +91,13 @@
             beta = event.beta.toFixed(1);
 		}
         
-        function rotateCubeWithPhone(a, b, g) {
-                // if (g < 0) {
-                //     if(a>180) {
-                //         camera.rotation.y = (THREE.MathUtils.degToRad(a) - Math.PI);
-                //     } else {
-                //         camera.rotation.y = (THREE.MathUtils.degToRad(a) + Math.PI);
-                //     }
-                // } else {
-                // camera.rotation.y = THREE.MathUtils.degToRad(a);
-                // }
-            if(g<0)  {
-                camera.rotation.z = Math.PI/2 + Math.PI/2 + THREE.MathUtils.degToRad(g) - Math.PI/2;
-            } else {
-                camera.rotation.z = THREE.MathUtils.degToRad(g) - Math.PI/2;
-            }
+        
+        function rotateCameraWithQuaternions(a, b, g) {
+            const euler = new THREE.Euler(THREE.MathUtils.degToRad(b), THREE.MathUtils.degToRad(a), THREE.MathUtils.degToRad(-g), 'YXZ');
+            camera.quaternion.setFromEuler(euler);
         }
 
+        
         camera.rotation.y = Math.PI/2;
 			function animate()
 			{
