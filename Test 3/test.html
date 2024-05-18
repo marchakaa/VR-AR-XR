@@ -82,8 +82,8 @@
             gamma = event.gamma.toFixed(1);
             beta = event.beta.toFixed(1);
 		}
-        function rotateCubeWithPhone(a, g) {
-            if(beta > 0) {
+        function rotateCubeWithPhone(a, b, g) {
+            if(b > 0) {
 
                 if (g < 0) {
                     camera.rotation.x = Math.PI/2 + Math.PI/2 + THREE.MathUtils.degToRad(g) - Math.PI/2;
@@ -105,7 +105,7 @@
                 cylinder.rotation.z += 0.004;
                 // controls.update();
                 // camera.rotation.y += 0.005;
-                rotateCubeWithPhone(alpha, gamma);
+                rotateCubeWithPhone(alpha, beta, gamma);
                 
                 renderer.render(scene, camera);
 			}
