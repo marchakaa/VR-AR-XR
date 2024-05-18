@@ -102,7 +102,7 @@
         function rotateCubeWithPhone(a, b, g) {
             const alpha = THREE.MathUtils.degToRad(a); // Yaw
             const beta = THREE.MathUtils.degToRad(b); // Pitch
-            const gamma = THREE.MathUtils.degToRad(g); // Roll
+            const gamma = THREE.MathUtils.degToRad(g) - Math.PI/2; // Roll
 
             // Create a quaternion from the Euler angles
             const euler = new THREE.Euler(beta, alpha, -gamma, 'ZXY');
