@@ -105,7 +105,7 @@
             const gamma = THREE.MathUtils.degToRad(g); // Roll
 
             // Create a quaternion from the Euler angles
-            const euler = new THREE.Euler(beta, alpha, -gamma, 'YXZ');
+            const euler = new THREE.Euler(beta, alpha, -gamma, 'ZXY');
             camera.quaternion.setFromEuler(euler);
             
         }
