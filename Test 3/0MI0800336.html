@@ -25,9 +25,14 @@
 			import {OrbitControls} from "three/addons/controls/OrbitControls.js";
 			import {vaxInit, renderer, scene, camera, light} from "vax";
 
+
 			vaxInit(animate);
 
-            light.position.set(0, 100, 100);
+            light.position.set(0, 100, 0);
+            let l = new THREE.PointLight(0xFFFFFF);
+            l.position.set(0,0,-30);
+
+            
 			camera.fov = 30;
             camera.position.set(0,0,0);
 			camera.updateProjectionMatrix();
@@ -44,23 +49,26 @@
                         
             scene.background.colorSpace = THREE.LinearSRGBColorSpace;
 
-            let cubeMap = new THREE.CubeTextureLoader().load([
-						'cube/negx.jpg', 'cube/posx.jpg',
-						'cube/negy.jpg', 'cube/posy.jpg',
-						'cube/negz.jpg', 'cube/posz.jpg']);
+
+    
 
         const N = 40; //Num of spheres
         let spheres = [];
         for (let i = 0; i < N; i++) {
-
-            const sphere = new THREE.Mesh(new THREE.SphereGeometry(30, 6, 5), new THREE.MeshBasicMaterial({
-            envMap: scene.background,
-            refractionRatio: 0.9,
-            transparent: true,
-            opacity: 0.5
-        }));
+            const sphere = new THREE.Mesh(new THREE.IcosahedronGeometry(30), new THREE.MeshPhysicalMaterial({
+                transmission: 1,
+                roughness: 0.05,
+                thickness: 0.1,
+                ior: 1.5
+            }));
         sphere.position.y = THREE.MathUtils.randInt(-50, 200);
         if(i % 4 == 0) {
+            let texture = new THREE.CubeTextureLoader().load([
+						'cube/posz.jpg', 'cube/negz.jpg',
+						'cube/posz.jpg', 'cube/negz.jpg',
+						'cube/posz.jpg', 'cube/negz.jpg']);
+
+            sphere.material.envMap = texture;
             sphere.position.x = THREE.MathUtils.randInt(-500, 500);
             sphere.position.z = -(500 + THREE.MathUtils.randInt(0, 200));
         } else if (i % 4 == 1) {
@@ -91,7 +99,7 @@
             beta = event.beta.toFixed(1);
 		}
         
-        function rotateCubeWithPhone(a, b, g) {
+        function rotateWithPhone(a, b, g) {
             
             if (g < 0) {
                     if(a>180) {
@@ -113,7 +121,8 @@
                     sphere.rotation.y += THREE.MathUtils.randFloat(0.004, 0.007);
                     sphere.rotation.z += THREE.MathUtils.randFloat(0.004, 0.007);
                 });
-                rotateCubeWithPhone(alpha, beta, gamma);
+                rotateWithPhone(alpha, beta, gamma);
+                // camera.rotation.y += 0.004;
                 renderer.render(scene, camera);
 			}
 			
