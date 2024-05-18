@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Test 3</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {OrbitControls} from "three/addons/controls/OrbitControls.js";
+			import {vaxInit, renderer, scene, camera, light} from "vax";
+
+			vaxInit(animate);
+
+            light.position.set(0, 100, 100);
+            scene.remove(light);
+			camera.fov = 30;
+			camera.updateProjectionMatrix();
+
+            
+            let pointerX = 0;
+            let pointerY = 0;
+
+            
+			// var controls = new OrbitControls(camera, renderer.domElement);
+			// 	controls.enableZoom = false;
+			// 	controls.enablePan = false;
+			// 	controls.enableDamping = true;
+			// 	controls.minPolarAngle = 0.1;
+			// 	controls.maxPolarAngle = Math.PI - 0.1;
+			// 	controls.dampingFactor = 0.1;
+
+			scene.background = new THREE.CubeTextureLoader().load([
+						'cube/posx.jpg', 'cube/negx.jpg',
+						'cube/posy.jpg', 'cube/negy.jpg',
+						'cube/posz.jpg', 'cube/negz.jpg']);
+                        
+                        let cubeMap = new THREE.CubeTextureLoader().load([
+                            'cube/negx.jpg', 'cube/posx.jpg',
+                            'cube/negy.jpg', 'cube/posy.jpg',
+                            'cube/negz.jpg', 'cube/posz.jpg']);
+                            // scene.background = cubeMap;
+                            scene.background.colorSpace = THREE.LinearSRGBColorSpace;
+        const cylinder = new THREE.Mesh(new THREE.BoxGeometry(30,30,30), new THREE.MeshPhysicalMaterial({
+            envMap: cubeMap,
+            metalness: 1,
+            roughness: 0,
+            transparent: true,
+            opacity: 0.9,
+            reflectivity: 1,
+            clearcoat: 1,
+            clearcoatRoughness: 0
+        }));
+        cylinder.position.z = -800;
+        scene.add(cylinder);
+
+        
+        let alpha = 0;
+        let gamma = 0;
+		window.addEventListener("deviceorientation", deviceOrientation, true);
+        
+		function deviceOrientation(event)
+		{
+            alpha = event.alpha.toFixed(1);
+            gamma = event.gamma.toFixed(1);
+		}
+        function rotateCubeWithPhone(a, g) {
+                if (g < 0) {
+                    if(a>180) {
+                        camera.rotation.y = -(THREE.MathUtils.degToRad(a) - Math.PI);
+                    } else {
+                        camera.rotation.y = -(THREE.MathUtils.degToRad(a) + Math.PI);
+                    }
+                } else {
+                camera.rotation.y = -THREE.MathUtils.degToRad(a);
+                }
+            if(g<0)  {
+                camera.rotation.x = Math.PI/2 + Math.PI/2 + THREE.MathUtils.degToRad(g) - Math.PI/2;
+            } else {
+                camera.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
+            }
+        }
+			function animate()
+			{
+                // cylinder.rotation.x += 0.003;
+                // cylinder.rotation.y += 0.002;
+                cylinder.rotation.z += 0.004;
+                // controls.update();
+                // camera.rotation.y += 0.005;
+                rotateCubeWithPhone(alpha, gamma);
+                
+                renderer.render(scene, camera);
+			}
+			
+		</script>	
+	</body>
+</html>
+
+
