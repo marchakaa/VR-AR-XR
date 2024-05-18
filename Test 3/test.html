@@ -63,10 +63,14 @@
             transparent: true,
             opacity: 0.6
         }));
-        if (i%2 == 0) {
-            sphere.position.set(THREE.MathUtils.randInt(300, 600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(400, 700));
+        if (i%4 == 0) {
+            sphere.position.set(THREE.MathUtils.randInt(300, 600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(-500, 700));
+        } else if(i%4 == 1) {
+            sphere.position.set(THREE.MathUtils.randInt(-300, -600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(-500, 700));
+        } else if (i%4 == 2) {
+            sphere.position.set(THREE.MathUtils.randInt(600, -600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(400, 700));
         } else {
-            sphere.position.set(THREE.MathUtils.randInt(-300, -600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(-200, -500));
+            sphere.position.set(THREE.MathUtils.randInt(600, -600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(-200, 500));
         }
         spheres.push(sphere);
         scene.add(sphere);
