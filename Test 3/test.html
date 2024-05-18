@@ -28,7 +28,6 @@
 			vaxInit(animate);
 
             light.position.set(0, 100, 100);
-            // scene.remove(light);
 			camera.fov = 30;
             camera.position.set(0,0,0);
 			camera.updateProjectionMatrix();
@@ -53,7 +52,12 @@
                         
             scene.background.colorSpace = THREE.LinearSRGBColorSpace;
 
-        const N = 100; //Num of spheres
+            let cubeMap = new THREE.CubeTextureLoader().load([
+						'cube/negx.jpg', 'cube/posx.jpg',
+						'cube/negy.jpg', 'cube/posy.jpg',
+						'cube/negz.jpg', 'cube/posz.jpg']);
+
+        const N = 40; //Num of spheres
         let spheres = [];
         for (let i = 0; i < N; i++) {
 
@@ -61,9 +65,9 @@
             envMap: scene.background,
             refractionRatio: 0.9,
             transparent: true,
-            opacity: 0.6
+            opacity: 0.5
         }));
-        sphere.position.y = THREE.MathUtils.randInt(-50, 150);
+        sphere.position.y = THREE.MathUtils.randInt(-50, 200);
         if(i % 4 == 0) {
             sphere.position.x = THREE.MathUtils.randInt(-500, 500);
             sphere.position.z = -(500 + THREE.MathUtils.randInt(0, 200));
@@ -96,21 +100,13 @@
 		}
         
         function rotateCubeWithPhone(a, b, g) {
-            // if(g<0)  {
-            //     camera.rotation.x = Math.PI/2 + Math.PI/2 + THREE.MathUtils.degToRad(g) - Math.PI/2;
-            // } else {
-            //     camera.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
-            // }
-            
-            if (g < 0) {
-                    if(a>180) {
-                        camera.rotation.y = (THREE.MathUtils.degToRad(a) - Math.PI);
-                    } else {
-                        camera.rotation.y = (THREE.MathUtils.degToRad(a) + Math.PI);
-                    }
-                } else {
-                camera.rotation.y = THREE.MathUtils.degToRad(a);
-                }
+            const alpha = THREE.MathUtils.degToRad(a); // Yaw
+            const beta = THREE.MathUtils.degToRad(b); // Pitch
+            const gamma = THREE.MathUtils.degToRad(g); // Roll
+
+            // Create a quaternion from the Euler angles
+            const euler = new THREE.Euler(beta, alpha, -gamma, 'YXZ');
+            camera.quaternion.setFromEuler(euler);
             
         }
 
@@ -118,13 +114,13 @@
 			function animate()
 			{
                 spheres.forEach(sphere => {
-                    sphere.rotation.x += 0.003;
-                    sphere.rotation.y += 0.002;
-                    sphere.rotation.z += 0.004; 
+                    sphere.rotation.x += THREE.MathUtils.randFloat(0.004, 0.007);
+                    sphere.rotation.y += THREE.MathUtils.randFloat(0.004, 0.007);
+                    sphere.rotation.z += THREE.MathUtils.randFloat(0.004, 0.007);
                 });
                 // controls.update();
                 // camera.rotation.y += 0.005;
-                // rotateCubeWithPhone(alpha, beta, gamma);
+                rotateCubeWithPhone(alpha, beta, gamma);
                 renderer.render(scene, camera);
 			}
 			
