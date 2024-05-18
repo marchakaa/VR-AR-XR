@@ -36,14 +36,6 @@
             let pointerX = 0;
             let pointerY = 0;
 
-            
-			// var controls = new OrbitControls(camera, renderer.domElement);
-			// 	controls.enableZoom = false;
-			// 	controls.enablePan = false;
-			// 	controls.enableDamping = true;
-			// 	controls.minPolarAngle = 0.1;
-			// 	controls.maxPolarAngle = Math.PI - 0.1;
-			// 	controls.dampingFactor = 0.1;
 
 			scene.background = new THREE.CubeTextureLoader().load([
 						'cube/posx.jpg', 'cube/negx.jpg',
@@ -100,11 +92,6 @@
 		}
         
         function rotateCubeWithPhone(a, b, g) {
-            // if(g<0)  {
-            //     camera.rotation.x = Math.PI/2 + Math.PI/2 + THREE.MathUtils.degToRad(g) - Math.PI/2;
-            // } else {
-            //     camera.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
-            // }
             
             if (g < 0) {
                     if(a>180) {
@@ -126,9 +113,7 @@
                     sphere.rotation.y += THREE.MathUtils.randFloat(0.004, 0.007);
                     sphere.rotation.z += THREE.MathUtils.randFloat(0.004, 0.007);
                 });
-                // controls.update();
-                camera.rotation.y += 0.005;
-                // rotateCubeWithPhone(alpha, beta, gamma);
+                rotateCubeWithPhone(alpha, beta, gamma);
                 renderer.render(scene, camera);
 			}
 			
