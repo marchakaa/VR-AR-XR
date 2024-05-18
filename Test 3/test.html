@@ -63,7 +63,11 @@
             transparent: true,
             opacity: 0.6
         }));
-        sphere.position.set(Math.pow(-1, i%2) * 500, THREE.MathUtils.randInt(-20, 100), THREE.MathUtils.randInt(-500, 500));
+        if (i%2 == 0) {
+            sphere.position.set(THREE.MathUtils.randInt(300, 600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(400, 700));
+        } else {
+            sphere.position.set(THREE.MathUtils.randInt(-300, -600), THREE.MathUtils.randInt(0, 200), THREE.MathUtils.randInt(-200, -500));
+        }
         spheres.push(sphere);
         scene.add(sphere);
             
@@ -82,10 +86,10 @@
             beta = event.beta.toFixed(1);
 		}
         function rotateCubeWithPhone(a, b, g) {
-            if (a>180) {
+            if (g < 0) {
                 camera.rotation.y = (THREE.MathUtils.degToRad(a) - Math.PI);
             } else {
-                camera.rotation.y = (THREE.MathUtils.degToRad(a) + Math.PI);
+                camera.rotation.y = THREE.MathUtils.degToRad(a);
             }
                 // if (g < 0) {
                 //     camera.rotation.x = Math.PI/2 + Math.PI/2 + THREE.MathUtils.degToRad(g) - Math.PI/2;
