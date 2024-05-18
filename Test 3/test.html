@@ -89,25 +89,26 @@
             gamma = event.gamma.toFixed(1);
             beta = event.beta.toFixed(1);
 		}
-        function rotateCubeWithPhone(a, b, g) {
-            if (g < 0) {
-                camera.rotation.y = (THREE.MathUtils.degToRad(a) - Math.PI);
+        
+        function rotateCubeWithPhone(a, g) {
+                if (g < 0) {
+                    if(a>180) {
+                        scene.rotation.y = -(THREE.MathUtils.degToRad(a) - Math.PI);
+                    } else {
+                        scene.rotation.y = -(THREE.MathUtils.degToRad(a) + Math.PI);
+                    }
+                } else {
+                scene.rotation.y = -THREE.MathUtils.degToRad(a);
+                }
+            if(g<0)  {
+                scene.rotation.x = Math.PI/2 + Math.PI/2 + THREE.MathUtils.degToRad(g) - Math.PI/2;
+
             } else {
-                camera.rotation.y = THREE.MathUtils.degToRad(a);
+
+                scene.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
             }
-            camera.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
-                // if (g < 0) {
-                //     camera.rotation.x = Math.PI/2 + Math.PI/2 + THREE.MathUtils.degToRad(g) - Math.PI/2;
-                //     if(a>180) {
-                //         camera.rotation.y = (THREE.MathUtils.degToRad(a) - Math.PI);
-                //     } else {
-                //         camera.rotation.y = (THREE.MathUtils.degToRad(a) + Math.PI);
-                //     }
-                // } else {
-                //     camera.rotation.y = THREE.MathUtils.degToRad(a);
-                //     camera.rotation.x = THREE.MathUtils.degToRad(g) - Math.PI/2;
-                // }
         }
+
 			function animate()
 			{
                 spheres.forEach(sphere => {
