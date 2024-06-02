@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>S1210: Разпадащ се текст</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script type="importmap">
+		  {
+			"imports": {
+			  "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+			  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/",
+			  "vax": "https://boytchev.github.io/CourseVAX/lib/vax.js"
+			}
+		  }
+		</script>
+	</head>
+	
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {vaxInit, scene, light} from "vax";
+
+			vaxInit(animate);
+			
+			light.intensity = 4;
+			
+			// материал с включен морфинг на върхове и нормали
+			var material = new THREE.MeshPhongMaterial( {
+					color: 'crimson',
+					shininess: 50,
+					flatShading: true,
+				} );
+
+			var mesh = new THREE.Mesh( new THREE.BoxGeometry(100,40,2), material );
+				scene.add( mesh );
+
+			function animate( t )
+			{
+				mesh.rotation.set( 0.1, Math.sin(t/2), 0 );
+			}
+		</script>	
+	</body>
+</html>
+
+
